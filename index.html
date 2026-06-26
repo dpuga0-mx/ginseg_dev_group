@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:oklch(0.07 0 0); }
+  button{ font-family:inherit; }
+  input::placeholder{ color:oklch(0.78 0 0 / .5); }
+  ::selection{ background:oklch(0.60 0.235 25); color:#fff; }
+  @keyframes cdcpulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
+  .cdc-disp{ font-family:'Bebas Neue',sans-serif; letter-spacing:.02em; }
+  image-slot{ display:block; }
+</style>
+</helmet>
+<div style="{{ rootStyle }}">
+
+  <!-- ================= HEADER ================= -->
+  <header style="position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);background:oklch(0.07 0 0 / .9);backdrop-filter:blur(12px)">
+    <div style="max-width:1180px;margin:0 auto;padding:22px 32px 8px;display:flex;flex-direction:column;align-items:center">
+      <div style="position:relative;display:flex;width:100%;align-items:center;justify-content:center">
+        <div style="position:absolute;left:0;display:flex;gap:12px">
+          <a href="#" aria-label="Facebook" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+
+        <a href="#" onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none">
+          <img src="cinemas-logo.png" alt="Cinemas del Country" style="width:62px;height:62px;object-fit:contain;filter:drop-shadow(var(--shadowRed))" />
+          <div style="text-align:center;line-height:1">
+            <div class="cdc-disp" style="font-size:26px;letter-spacing:1.5px;color:#fff">cine<span style="color:var(--primary)">mas</span></div>
+            <div style="margin-top:3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:5px;color:var(--gray)">del country</div>
+          </div>
+        </a>
+
+        <div style="position:absolute;right:0;display:flex;align-items:center;gap:12px">
+          <button aria-label="Buscar" style="{{ iconBtnStyle }};background:transparent;cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+          <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:10px 18px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
+        </div>
+      </div>
+
+      <nav style="margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 40px;border-top:1px solid var(--border);padding-top:16px;width:100%">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.href }}" onClick="{{ n.onClick }}" style="{{ n.style }}">{{ n.label }}</a>
+        </sc-for>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HOME ================= -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+
+    <!-- HERO -->
+    <section style="position:relative;overflow:hidden;isolation:isolate">
+      <image-slot id="cdc-hero-bg" fit="cover" src="posters/toystory.png" placeholder="Imagen de sala (hero)" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5"></image-slot>
+      <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
+      <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
+
+      <div style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
+          </div>
+          <h1 class="cdc-disp" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ featured.title }}</h1>
+          <p style="margin:12px 0 0;font-size:19px;font-style:italic;color:var(--gray)">"{{ featured.tagline }}"</p>
+          <div style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
+            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ featured.score }}/10</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+            <span>{{ featured.genre }}</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ featured.duration }}</span>
+            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+            <span style="border:1px solid color-mix(in oklab, #fff 30%, transparent);border-radius:4px;padding:1px 7px;font-size:10px">{{ featured.rating }}</span>
+          </div>
+          <p style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:color-mix(in oklab, #fff 80%, transparent)">{{ featured.synopsis }}</p>
+          <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
+            <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;gap:12px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
+            <button onClick="{{ openTrailer }}" style="display:inline-flex;align-items:center;gap:12px;cursor:pointer;border-radius:30px;border:1px solid color-mix(in oklab, #fff 30%, transparent);background:color-mix(in oklab, #fff 5%, transparent);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
+          </div>
+        </div>
+
+        <div style="position:relative">
+          <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster);outline:1px solid var(--border)">
+            <image-slot id="cdc-poster-featured" fit="cover" src="posters/toystory.png" placeholder="Póster Toy Story 5" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+            <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+            <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
+              <div>
+                <div class="cdc-disp" style="font-size:22px;color:#fff">EN CARTELERA</div>
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">Desde el 24 de Junio</div>
+              </div>
+              <span style="border-radius:30px;background:var(--primary);padding:4px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">IMAX</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main style="max-width:1180px;margin:0 auto;padding:0 32px">
+
+      <!-- BILLBOARD -->
+      <section id="cartelera" style="padding-top:96px">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
+          <div style="position:relative">
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Hoy en pantalla</div>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Cartelera</h2>
+            <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;border-radius:30px;border:1px solid var(--border);background:var(--card);padding:5px">
+            <sc-for list="{{ dayTabs }}" as="d" hint-placeholder-count="4">
+              <button onClick="{{ d.onClick }}" style="{{ d.style }}">{{ d.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
+          <sc-for list="{{ movies }}" as="m" hint-placeholder-count="7">
+            <article style="position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
+              <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
+                <image-slot id="{{ m.slotId }}" fit="cover" src="{{ m.poster }}" placeholder="{{ m.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+                <div style="position:absolute;left:12px;top:12px;z-index:2;display:flex;align-items:center;gap:4px;border-radius:30px;background:oklch(0.07 0 0 / .8);padding:4px 10px;font-size:11px;font-weight:800;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:12px;height:12px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ m.score }}</div>
+                <div style="position:absolute;right:12px;top:12px;z-index:2;border:1px solid color-mix(in oklab,#fff 40%,transparent);border-radius:4px;background:oklch(0.07 0 0 / .7);padding:2px 7px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff;backdrop-filter:blur(4px)">{{ m.rating }}</div>
+                <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ m.formats }}" as="f" hint-placeholder-count="2">
+                    <span style="border-radius:4px;background:color-mix(in oklab,var(--primary) 90%,transparent);padding:2px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ f }}</span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;flex:1;flex-direction:column;padding:20px">
+                <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ m.title }}</h3>
+                <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ m.genre }} · {{ m.duration }}</p>
+                <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
+                  <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:color-mix(in oklab,#fff 70%,transparent)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Horarios</div>
+                  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+                    <sc-for list="{{ m.schedule }}" as="t" hint-placeholder-count="4">
+                      <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.time }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <button onClick="{{ m.onComprar }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- PRÓXIMOS ESTRENOS -->
+      <section id="proximamente" style="padding-top:112px">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
+          <div style="position:relative">
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Reserva antes que nadie</div>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
+            <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
+          <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
+            <article style="position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
+              <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
+                <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+                <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
+                <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
+                  <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
+                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
+                </div>
+              </div>
+              <div style="display:flex;flex:1;flex-direction:column;padding:20px">
+                <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
+                <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
+                <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
+                <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- EXPERIENCES -->
+      <section style="padding-top:112px">
+        <div style="position:relative;margin-bottom:40px">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Vive el cine</div>
+          <h2 class="cdc-disp" style="margin:8px 0 0;font-size:48px;letter-spacing:2px;color:#fff">Experiencias premium</h2>
+          <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
+        </div>
+        <div style="display:grid;gap:20px;grid-template-columns:repeat(3,1fr)">
+          <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="3">
+            <div style="position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--border);background:var(--card);padding:32px">
+              <div style="position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:color-mix(in oklab,var(--primary) 12%,transparent);filter:blur(48px)"></div>
+              <div style="position:relative">
+                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">{{ x.tag }}</span>
+                <div class="cdc-disp" style="margin-top:12px;font-size:52px;letter-spacing:3px;color:#fff">{{ x.name }}</div>
+                <p style="margin-top:16px;font-size:14px;line-height:1.6;color:var(--gray)">{{ x.desc }}</p>
+                <div style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">Conocer más <span>→</span></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- PROMO -->
+      <section style="padding-top:112px;padding-bottom:112px">
+        <div style="position:relative;overflow:hidden;border-radius:24px;border:1px solid color-mix(in oklab,var(--primary) 30%,transparent);background:var(--blue);padding:56px">
+          <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 80% 50%, var(--primary) 0%, transparent 55%)"></div>
+          <div style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
+            <div>
+              <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Martes 2x1</div>
+              <h3 class="cdc-disp" style="margin:12px 0 0;font-size:46px;letter-spacing:1px;color:#fff">Dos entradas. Un precio. Todos los martes.</h3>
+              <p style="margin:16px 0 0;max-width:32rem;font-size:16px;color:color-mix(in oklab,#fff 80%,transparent)">Disfruta el mejor cine acompañado. Válido en salas 2D presentando tu credencial Cinemas del Country Club.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+              <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Aprovechar promo</button>
+              <span style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Aplican términos y condiciones</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer style="border-top:1px solid var(--border);background:oklch(0.07 0 0)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <img src="cinemas-logo.png" alt="Cinemas del Country" style="width:46px;height:46px;object-fit:contain" />
+            <div style="line-height:1">
+              <div class="cdc-disp" style="font-size:24px;letter-spacing:1.5px;color:#fff">cine<span style="color:var(--primary)">mas</span></div>
+              <div style="margin-top:3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:4px;color:var(--gray)">del country</div>
+            </div>
+          </div>
+          <p style="margin-top:16px;max-width:20rem;font-size:14px;color:var(--gray)">La mejor experiencia de cine. Estrenos, salas premium y promociones todo el año.</p>
+          <div style="margin-top:16px;display:flex;gap:8px">
+            <a href="#" aria-label="Facebook" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="Instagram" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          </div>
+        </div>
+        <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+          <div>
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">{{ col.title }}</div>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+                <a href="#" style="font-size:14px;color:var(--gray);text-decoration:none">{{ l }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid var(--border);padding:20px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">32 complejos · 180 salas · México&nbsp;&nbsp;|&nbsp;&nbsp;© 2026 Cinemas del Country</div>
+    </footer>
+  </div>
+  </sc-if>
+
+  <!-- ================= SEATS ================= -->
+  <sc-if value="{{ isSeats }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:780px;margin:0 auto;padding:34px 32px 140px">
+    <button onClick="{{ goHome }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:14px">← Volver a la cartelera</button>
+    <div style="text-align:center;margin-bottom:30px">
+      <sc-if value="{{ isPreorder }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;background:var(--gradRed);padding:5px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:12px;box-shadow:var(--shadowRed)">★ Preventa de estreno</div>
+      </sc-if>
+      <div class="cdc-disp" style="font-size:40px;letter-spacing:1px;color:#fff;line-height:1">{{ sel.title }}</div>
+      <div style="margin-top:8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ sel.format }} · Sala {{ sel.sala }} · {{ dateShort }} {{ showtime }}</div>
+    </div>
+
+    <div class="cdc-disp" style="text-align:center;font-size:14px;letter-spacing:10px;color:var(--gray)">PANTALLA</div>
+    <div style="height:30px;width:80%;margin:8px auto 38px;border-top:3px solid var(--primary);border-radius:50% / 100% 100% 0 0;box-shadow:0 -12px 30px -12px var(--primary)"></div>
+
+    <div style="display:flex;flex-direction:column;gap:9px;align-items:center;margin-bottom:34px">
+      <sc-for list="{{ seatRows }}" as="row" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ row.seats }}" as="s" hint-placeholder-count="12">
+              <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.n }}</button>
+            </sc-for>
+          </div>
+          <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:22px;flex-wrap:wrap;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">
+      <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;border:1px solid var(--gray);background:var(--card)"></span>Disponible</div>
+      <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;background:var(--primary)"></span>Seleccionado</div>
+      <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;background:var(--border)"></span>Ocupado</div>
+      <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;border:1.5px solid var(--primary);background:transparent"></span>VIP (filas A–C)</div>
+    </div>
+  </main>
+
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:40;background:oklch(0.07 0 0 / .96);border-top:1px solid var(--border);backdrop-filter:blur(12px)">
+    <div style="max-width:780px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ seatCountLabel }}</div>
+        <div style="font-size:14px;font-weight:700;color:#fff;max-width:34ch">{{ seatListLabel }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="text-align:right">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Total</div>
+          <div class="cdc-disp" style="font-size:26px;color:#fff">{{ totalLabel }}</div>
+        </div>
+        <button onClick="{{ goCheckout }}" style="{{ continueStyle }}">Continuar →</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= CHECKOUT ================= -->
+  <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:980px;margin:0 auto;padding:34px 32px 100px">
+    <button onClick="{{ backToSeats }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:18px">← Volver a asientos</button>
+    <h1 class="cdc-disp" style="margin:0 0 28px;font-size:44px;letter-spacing:1px;color:#fff">Confirmar y pagar</h1>
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:42px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <div>
+          <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Datos del comprador</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input placeholder="Nombre completo" style="{{ inputStyle }}" />
+            <input placeholder="Correo electrónico" style="{{ inputStyle }}" />
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Método de pago</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input placeholder="Número de tarjeta" style="{{ inputStyle }}" />
+            <div style="display:flex;gap:12px">
+              <input placeholder="MM / AA" style="{{ inputStyle }};flex:1" />
+              <input placeholder="CVV" style="{{ inputStyle }};flex:1" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius:18px;border:1px solid var(--border);background:var(--card);padding:26px">
+        <div style="display:flex;gap:14px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border)">
+          <div style="width:58px;height:86px;flex:none;border-radius:8px;background:var(--gradRed);display:flex;align-items:center;justify-content:center;padding:8px;text-align:center"><span class="cdc-disp" style="font-size:15px;line-height:1.05;color:#fff">{{ sel.title }}</span></div>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.15">{{ sel.title }}</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--gray);line-height:1.5">{{ sel.format }} · Sala {{ sel.sala }}<br>{{ dateShort }} · {{ showtime }}</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#fff;margin-bottom:10px"><span style="color:var(--gray)">Asientos</span><span style="font-weight:700">{{ seatListLabel }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#fff;margin-bottom:10px"><span style="color:var(--gray)">{{ seatCountLabel }}</span><span>{{ subtotalLabel }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#fff;margin-bottom:16px"><span style="color:var(--gray)">Servicio</span><span>{{ feeLabel }}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;border-top:1px solid var(--border);margin-bottom:22px">
+          <span class="cdc-disp" style="font-size:20px;letter-spacing:1px;color:#fff">TOTAL</span>
+          <span class="cdc-disp" style="font-size:30px;color:var(--primary)">{{ grandTotalLabel }}</span>
+        </div>
+        <button onClick="{{ confirmPurchase }}" style="width:100%;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Pagar {{ grandTotalLabel }}</button>
+        <div style="margin-top:12px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Pago seguro · Cancelación hasta 2h antes</div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ================= CONFIRM ================= -->
+  <sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:540px;margin:0 auto;padding:56px 32px 100px;text-align:center">
+    <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary);margin-bottom:10px">● {{ confirmLabel }}</div>
+    <h1 class="cdc-disp" style="margin:0 0 30px;font-size:44px;letter-spacing:1px;color:#fff">¡Nos vemos en la sala!</h1>
+
+    <div style="border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--card);text-align:left;box-shadow:var(--shadowPoster)">
+      <div style="background:var(--gradRed);padding:18px 26px;display:flex;justify-content:space-between;align-items:center">
+        <div class="cdc-disp" style="font-size:24px;letter-spacing:1px;color:#fff">cinemas del country</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;opacity:.9">E-TICKET</div>
+      </div>
+      <div style="padding:26px;display:flex;gap:24px;align-items:center">
+        <div style="flex:1">
+          <div class="cdc-disp" style="font-size:30px;color:#fff;line-height:1;margin-bottom:18px">{{ sel.title }}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Fecha</div><div style="font-size:14px;font-weight:800;color:#fff">{{ dateShort }}</div></div>
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Hora</div><div style="font-size:14px;font-weight:800;color:#fff">{{ showtime }}</div></div>
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Sala</div><div style="font-size:14px;font-weight:800;color:#fff">Sala {{ sel.sala }}</div></div>
+            <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Asientos</div><div style="font-size:14px;font-weight:800;color:#fff">{{ seatListLabel }}</div></div>
+          </div>
+        </div>
+        <div style="flex:none">
+          <div style="width:106px;height:106px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px;background:#fff;border-radius:8px">
+            <sc-for list="{{ qrCells }}" as="q" hint-placeholder-count="49">
+              <div style="{{ q.style }}"></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:2px dashed var(--border);padding:16px 26px;display:flex;justify-content:space-between;align-items:center;background:oklch(0.07 0 0)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--gray)">CÓDIGO {{ bookingCode }}</div>
+        <div class="cdc-disp" style="font-size:22px;color:var(--primary)">{{ grandTotalLabel }}</div>
+      </div>
+    </div>
+
+    <p style="margin:24px 0 28px;font-size:13px;color:var(--gray);line-height:1.6">Hemos enviado tu e-ticket por correo. Presenta el código QR en la entrada de la sala.</p>
+    <button onClick="{{ goHome }}" style="border:1px solid #fff;background:transparent;cursor:pointer;border-radius:30px;padding:13px 32px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">Volver a la cartelera</button>
+  </main>
+  </sc-if>
+
+  <!-- ================= TRAILER MODAL ================= -->
+  <sc-if value="{{ trailerOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeTrailer }}" style="position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:32px;background:oklch(0 0 0 / .82);backdrop-filter:blur(6px)">
+    <div style="width:100%;max-width:880px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px">
+        <div>
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">Tráiler oficial</div>
+          <div class="cdc-disp" style="font-size:30px;color:#fff;line-height:1">{{ featured.title }}</div>
+        </div>
+        <button onClick="{{ closeTrailer }}" style="border:1px solid var(--border);background:transparent;cursor:pointer;color:#fff;border-radius:30px;padding:8px 18px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Cerrar ✕</button>
+      </div>
+      <div style="position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:oklch(0.11 0.005 260);display:flex;align-items:center;justify-content:center;border:1px solid var(--border)">
+        <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 50% 50%, var(--primary) 0%, transparent 60%)"></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:16px">
+          <div style="width:74px;height:74px;border-radius:50%;background:var(--gradRed);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:28px;height:28px;margin-left:4px"><polygon points="6 3 20 12 6 21 6 3"/></svg></div>
+          <div style="font-size:12px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Vista previa del tráiler</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    day: 0,
+    movieIndex: 0,
+    showtime: null,
+    seats: [],
+    trailerOpen: false,
+    source: 'movies',
+    bookingCode: null,
+  };
+
+  featured() {
+    return {
+      title: 'TOY STORY 5',
+      tagline: 'La aventura continúa',
+      synopsis: 'Woody, Buzz y toda la pandilla regresan en una nueva aventura llena de emoción, amistad y diversión para toda la familia.',
+      genre: 'Animación · Familiar',
+      duration: '1h 42min',
+      rating: 'AA',
+      score: '9.0',
+    };
+  }
+
+  movieData() {
+    return [
+      { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'] },
+      { title:'Leviticus: Ritual de Sangre', genre:'Terror', duration:'1h 28m', rating:'B15', score:'7.4', sala:'5', formats:['ESP'], poster:'posters/leviticus.png', schedule:['6:00','7:40','9:20'] },
+      { title:'Disclosure Day', genre:'Ciencia Ficción', duration:'2h 26m', rating:'B', score:'8.1', sala:'2', formats:['ESP','SUB'], poster:'posters/disclosure.png', schedule:['12:30','3:10','6:00','8:40'] },
+      { title:'Letras Robadas', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'7.8', sala:'6', formats:['ESP'], poster:'posters/letras.png', schedule:['4:00'] },
+      { title:'Amos del Universo', genre:'Fantasía', duration:'2h 21m', rating:'TBC', score:'8.3', sala:'3', formats:['ESP'], poster:'posters/amos.png', schedule:['3:20'] },
+      { title:'Scary Movie 6', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'6.9', sala:'4', formats:['ESP','SUB'], poster:'posters/scary.png', schedule:['1:15','3:15','5:15','7:15','9:15'] },
+      { title:'Backrooms: Sin Salida', genre:'Suspenso', duration:'1h 50m', rating:'TBC', score:'7.2', sala:'7', formats:['ESP'], poster:'posters/backrooms.png', schedule:['6:00','8:00'] },
+    ];
+  }
+
+  upcomingData() {
+    return [
+      { title:'Avatar: Fuego y Ceniza', genre:'Ciencia Ficción', duration:'3h 10m', rating:'B', sala:'IMAX', format:'IMAX 3D', poster:'', premiere:'19 Dic 2026', dateBig:'19 DIC', dateSub:'Estreno mundial', synopsis:'Jake Sully y Neytiri enfrentan una nueva amenaza que pondrá a prueba a toda la familia en Pandora.' },
+      { title:'Spider-Man: Nuevo Día', genre:'Acción', duration:'2h 18m', rating:'B', sala:'1', format:'ESP 3D', poster:'', premiere:'31 Jul 2026', dateBig:'31 JUL', dateSub:'Función de medianoche', synopsis:'Peter Parker comienza un nuevo capítulo en una ciudad que aprende a confiar de nuevo en su héroe.' },
+      { title:'Zootopia 2', genre:'Animación', duration:'1h 48m', rating:'A', sala:'3', format:'ESP 2D', poster:'', premiere:'26 Nov 2026', dateBig:'26 NOV', dateSub:'Preventa familiar', synopsis:'Judy y Nick regresan con un nuevo caso que los llevará a los rincones más sorprendentes de Zootopia.' },
+      { title:'Misión Imposible: Legado', genre:'Acción', duration:'2h 29m', rating:'B15', sala:'2', format:'ESP', poster:'', premiere:'14 Ago 2026', dateBig:'14 AGO', dateSub:'Avant premiere', synopsis:'Ethan Hunt acepta la misión más personal de su carrera en una carrera contra el tiempo por todo el mundo.' },
+    ];
+  }
+
+  mxn(n) { return '$' + n.toLocaleString('es-MX'); }
+  priceFor(id) {
+    if (this.state.source === 'upcoming') return 'ABC'.includes(id[0]) ? 149 : 109;
+    return 'ABC'.includes(id[0]) ? 119 : 79;
+  }
+
+  goHome = () => { this.setState({ screen:'home' }); window.scrollTo(0,0); };
+  openSeats = (idx, time) => { this.setState({ screen:'seats', source:'movies', movieIndex:idx, showtime:time, seats:[] }); window.scrollTo(0,0); };
+  openPreorder = (idx) => { this.setState({ screen:'seats', source:'upcoming', movieIndex:idx, showtime:this.upcomingData()[idx].premiereTime || '20:00', seats:[] }); window.scrollTo(0,0); };
+  buyFeatured = () => this.openSeats(0, this.movieData()[0].schedule[0]);
+  setDay = (i) => this.setState({ day:i });
+  toggleSeat = (id) => this.setState(s => ({ seats: s.seats.includes(id) ? s.seats.filter(x=>x!==id) : [...s.seats, id] }));
+  goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout' }); window.scrollTo(0,0); } };
+  backToSeats = () => { this.setState({ screen:'seats' }); window.scrollTo(0,0); };
+  confirmPurchase = () => {
+    const code = 'CDC-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+    this.setState({ screen:'confirm', bookingCode: code });
+    window.scrollTo(0,0);
+  };
+  openTrailer = () => this.setState({ trailerOpen:true });
+  closeTrailer = () => this.setState({ trailerOpen:false });
+
+  renderVals() {
+    const screen = this.state.screen;
+    const movies = this.movieData();
+    const upcoming = this.upcomingData();
+    const isPreorder = this.state.source === 'upcoming';
+    const selList = isPreorder ? upcoming : movies;
+    const _rawSel = selList[this.state.movieIndex] || movies[0];
+    const sel = { ..._rawSel, format: _rawSel.format || (_rawSel.formats && _rawSel.formats[0]) || '' };
+    const _now = new Date();
+    const _months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : `Hoy, ${_now.getDate()} ${_months[_now.getMonth()]}`;
+    const occupied = new Set(['A1','A2','C5','C6','D8','E3','F10','F11','B7','H4','H5','G2','D1','E9','A11','C2']);
+
+    const rootStyle = [
+      '--bg:oklch(0.07 0 0)','--fg:oklch(1 0 0)','--card:oklch(0.11 0.005 260)',
+      '--primary:oklch(0.60 0.235 25)','--blue:oklch(0.28 0.07 260)','--gray:oklch(0.78 0 0)',
+      '--border:oklch(1 0 0 / 8%)',
+      '--gradRed:linear-gradient(135deg, oklch(0.60 0.235 25), oklch(0.50 0.22 20))',
+      '--gradHero:linear-gradient(180deg, transparent 0%, oklch(0.07 0 0 / 0.4) 40%, oklch(0.07 0 0) 100%)',
+      '--gradPoster:linear-gradient(180deg, transparent 50%, oklch(0 0 0 / 0.95) 100%)',
+      '--shadowRed:0 10px 40px -10px oklch(0.60 0.235 25 / 0.5)',
+      '--shadowPoster:0 20px 60px -20px oklch(0 0 0 / 0.8)',
+      'background:var(--bg)','color:var(--fg)','min-height:100vh',
+      "font-family:'Inter',system-ui,sans-serif",'-webkit-font-smoothing:antialiased'
+    ].join(';');
+
+    const iconBtnStyle = 'display:grid;place-items:center;height:36px;width:36px;border-radius:50%;border:1px solid var(--border);color:color-mix(in oklab,#fff 80%,transparent);text-decoration:none';
+    const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%;outline:none';
+
+    const navLabels = ['Home','Cartelera','Próximamente','Promociones','Contacto'];
+    const navItems = navLabels.map((label, i) => ({
+      label,
+      href: label === 'Cartelera' ? '#cartelera' : (label === 'Próximamente' ? '#proximamente' : '#'),
+      onClick: label === 'Home' ? this.goHome : null,
+      style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${i===0 ? 'var(--primary)' : 'color-mix(in oklab,#fff 85%,transparent)'}`,
+    }));
+
+    const dayTabs = ['Hoy','Mañana','Sáb','Dom'].map((label, i) => {
+      const active = i === this.state.day;
+      return {
+        label,
+        onClick: () => this.setDay(i),
+        style: `border:none;cursor:pointer;border-radius:30px;padding:7px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;${active ? 'background:var(--gradRed);color:#fff;box-shadow:var(--shadowRed)' : 'background:transparent;color:var(--gray)'}`,
+      };
+    });
+
+    const stBtn = 'border:1px solid var(--border);cursor:pointer;border-radius:8px;background:oklch(0.07 0 0 / .4);padding:8px;font-size:14px;font-weight:800;color:#fff';
+    const moviesVm = movies.map((m, idx) => ({
+      ...m,
+      slotId: 'cdc-poster-' + idx,
+      posterHint: 'Póster ' + m.title,
+      onComprar: () => this.openSeats(idx, m.schedule[0]),
+      schedule: m.schedule.map(time => ({ time, onClick: () => this.openSeats(idx, time), style: stBtn })),
+    }));
+
+    const upcomingVm = upcoming.map((u, idx) => ({
+      ...u,
+      slotId: 'cdc-upcoming-' + idx,
+      posterHint: 'Póster ' + u.title,
+      onPreorder: () => this.openPreorder(idx),
+    }));
+
+    // seats
+    const rows = 'ABCDEFGH'.split('');
+    const seatBase = "width:28px;height:26px;border-radius:7px 7px 3px 3px;font-weight:700;font-size:9px;display:flex;align-items:center;justify-content:center;padding:0";
+    const seatRows = rows.map((r, ri) => {
+      const pref = ri < 3;
+      const seats = [];
+      for (let n = 1; n <= 12; n++) {
+        const id = r + n;
+        const isOcc = occupied.has(id);
+        const isSel = this.state.seats.includes(id);
+        let bg, color, border, cursor = 'pointer';
+        if (isOcc) { bg='var(--border)'; color='transparent'; border='1px solid var(--border)'; cursor='not-allowed'; }
+        else if (isSel) { bg='var(--primary)'; color='#fff'; border='1px solid var(--primary)'; }
+        else { bg='var(--card)'; color='var(--gray)'; border=`${pref?1.5:1}px solid ${pref?'var(--primary)':'var(--gray)'}`; }
+        const ml = n === 7 ? 'margin-left:22px;' : '';
+        const op = isOcc ? 'opacity:.4;' : '';
+        seats.push({ id, n, onClick: isOcc ? null : () => this.toggleSeat(id), style:`${seatBase};${ml}${op}background:${bg};color:${color};border:${border};cursor:${cursor}` });
+      }
+      return { label:r, seats };
+    });
+
+    const sorted = [...this.state.seats].sort();
+    const subtotal = this.state.seats.reduce((s, id) => s + this.priceFor(id), 0);
+    const fee = this.state.seats.length ? 18 : 0;
+    const grand = subtotal + fee;
+    const hasSeats = this.state.seats.length > 0;
+
+    const qrCells = [];
+    for (let i = 0; i < 49; i++) {
+      const r = Math.floor(i/7), c = i%7;
+      const corner = (r<2&&c<2)||(r<2&&c>4)||(r>4&&c<2);
+      const on = corner || ((r*3 + c*7 + (r^c) + r*c) % 3 !== 0);
+      qrCells.push({ style:`border-radius:1px;background:${on ? '#0a0a0a' : 'transparent'}` });
+    }
+
+    return {
+      rootStyle, iconBtnStyle, inputStyle,
+      isHome: screen==='home', isSeats: screen==='seats', isCheckout: screen==='checkout', isConfirm: screen==='confirm',
+      trailerOpen: this.state.trailerOpen,
+
+      featured: this.featured(),
+      navItems, dayTabs, movies: moviesVm, upcoming: upcomingVm,
+      isPreorder, dateShort,
+      confirmLabel: isPreorder ? 'Preventa confirmada' : 'Compra confirmada',
+
+      experiences: [
+        { name:'IMAX', tag:'Sensorial', desc:'Pantalla gigante y sonido envolvente de última generación.' },
+        { name:'4DX', tag:'Inmersivo', desc:'Asientos en movimiento, viento, agua y aromas en sincronía con la película.' },
+        { name:'VIP', tag:'Premium', desc:'Salas exclusivas con butacas reclinables y servicio en sala.' },
+      ],
+      footerCols: [
+        { title:'Cartelera', links:['Hoy','Próximamente','Avant Premiere','Festivales'] },
+        { title:'Salas', links:['IMAX','4DX','VIP','Tradicional'] },
+        { title:'Ayuda', links:['Contacto','Términos','Privacidad','Trabaja con nosotros'] },
+      ],
+
+      sel, showtime: this.state.showtime,
+      seatRows,
+      seatCountLabel: hasSeats ? `${this.state.seats.length} ${this.state.seats.length===1?'entrada':'entradas'}` : 'Sin asientos',
+      seatListLabel: hasSeats ? sorted.join(', ') : 'Elige tus butacas',
+      totalLabel: this.mxn(subtotal),
+      subtotalLabel: this.mxn(subtotal),
+      feeLabel: this.mxn(fee),
+      grandTotalLabel: this.mxn(grand),
+      continueStyle: `border:none;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:13px 30px;border-radius:30px;color:#fff;${hasSeats ? 'background:var(--gradRed);cursor:pointer;box-shadow:var(--shadowRed)' : 'background:var(--border);cursor:not-allowed;opacity:.6'}`,
+      qrCells, bookingCode: this.state.bookingCode || '',
+
+      goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
+      backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
+      openTrailer:this.openTrailer, closeTrailer:this.closeTrailer,
+    };
+  }
+}
+</script>
+</body>
+</html>
