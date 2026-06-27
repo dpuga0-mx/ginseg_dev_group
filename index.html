@@ -115,10 +115,22 @@
             <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Cartelera</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;border-radius:30px;border:1px solid var(--border);background:var(--card);padding:5px">
-            <sc-for list="{{ dayTabs }}" as="d" hint-placeholder-count="4">
-              <button onClick="{{ d.onClick }}" style="{{ d.style }}">{{ d.label }}</button>
-            </sc-for>
+          <div style="border-radius:16px;border:1px solid var(--border);background:var(--card);padding:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <button onClick="{{ prevMonth }}" style="{{ calArrowStyle }}">‹</button>
+              <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ calMonthLabel }}</span>
+              <button onClick="{{ nextMonth }}" style="{{ calArrowStyle }}">›</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px;margin-bottom:4px">
+              <sc-for list="{{ calDayLabels }}" as="dn" hint-placeholder-count="7">
+                <div style="text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);padding:4px 0">{{ dn }}</div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px">
+              <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.day }}</button>
+              </sc-for>
+            </div>
           </div>
         </div>
 
@@ -435,7 +447,9 @@
 class Component extends DCLogic {
   state = {
     screen: 'home',
-    day: 0,
+    calYear: new Date().getFullYear(),
+    calMonth: new Date().getMonth(),
+    selectedDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
     movieIndex: 0,
     showtime: null,
     seats: [],
@@ -488,7 +502,17 @@ class Component extends DCLogic {
   openSeats = (idx, time) => { this.setState({ screen:'seats', source:'movies', movieIndex:idx, showtime:time, seats:[] }); window.scrollTo(0,0); };
   openPreorder = (idx) => { this.setState({ screen:'seats', source:'upcoming', movieIndex:idx, showtime:this.upcomingData()[idx].premiereTime || '20:00', seats:[] }); window.scrollTo(0,0); };
   buyFeatured = () => this.openSeats(0, this.movieData()[0].schedule[0]);
-  setDay = (i) => this.setState({ day:i });
+  prevMonth = () => {
+    const { calYear, calMonth } = this.state;
+    if (calMonth === 0) this.setState({ calYear: calYear - 1, calMonth: 11 });
+    else this.setState({ calMonth: calMonth - 1 });
+  };
+  nextMonth = () => {
+    const { calYear, calMonth } = this.state;
+    if (calMonth === 11) this.setState({ calYear: calYear + 1, calMonth: 0 });
+    else this.setState({ calMonth: calMonth + 1 });
+  };
+  selectDate = (year, month, day) => this.setState({ selectedDate: { year, month, day } });
   toggleSeat = (id) => this.setState(s => ({ seats: s.seats.includes(id) ? s.seats.filter(x=>x!==id) : [...s.seats, id] }));
   setForm = (field, val) => this.setState(s => ({ form: { ...s.form, [field]: val }, formError: '' }));
   goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout', formError: '' }); window.scrollTo(0,0); } };
@@ -513,8 +537,17 @@ class Component extends DCLogic {
     const selList = isPreorder ? upcoming : movies;
     const selBase = selList[this.state.movieIndex] || movies[0];
     const sel = { ...selBase, format: selBase.format || (selBase.formats && selBase.formats[0]) || '' };
-    const dayNames = ['Hoy, 26 jun', 'Mañana, 27 jun', 'Sáb 28 jun', 'Dom 29 jun'];
-    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : dayNames[this.state.day];
+    const todayDate = new Date();
+    const today = { year: todayDate.getFullYear(), month: todayDate.getMonth(), day: todayDate.getDate() };
+    const selDate = this.state.selectedDate || today;
+    const spanishMonths = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const todayMs = new Date(today.year, today.month, today.day).getTime();
+    const selMs = new Date(selDate.year, selDate.month, selDate.day).getTime();
+    const diffDays = Math.round((selMs - todayMs) / 86400000);
+    const dateLabel = diffDays === 0 ? `Hoy, ${selDate.day} ${spanishMonths[selDate.month]}` :
+                      diffDays === 1 ? `Mañana, ${selDate.day} ${spanishMonths[selDate.month]}` :
+                      `${selDate.day} ${spanishMonths[selDate.month]}${selDate.year !== today.year ? ' ' + selDate.year : ''}`;
+    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : dateLabel;
     const occupied = new Set(['A1','A2','C5','C6','D8','E3','F10','F11','B7','H4','H5','G2','D1','E9','A11','C2']);
 
     const rootStyle = [
@@ -541,14 +574,33 @@ class Component extends DCLogic {
       style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${i===0 ? 'var(--primary)' : 'color-mix(in oklab,#fff 85%,transparent)'}`,
     }));
 
-    const dayTabs = ['Hoy','Mañana','Sáb','Dom'].map((label, i) => {
-      const active = i === this.state.day;
-      return {
-        label,
-        onClick: () => this.setDay(i),
-        style: `border:none;cursor:pointer;border-radius:30px;padding:7px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;${active ? 'background:var(--gradRed);color:#fff;box-shadow:var(--shadowRed)' : 'background:transparent;color:var(--gray)'}`,
-      };
-    });
+    const calYear = this.state.calYear;
+    const calMonth = this.state.calMonth;
+    const calMonthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const calMonthLabel = `${calMonthNames[calMonth]} ${calYear}`;
+    const calDayLabels = ['L','M','M','J','V','S','D'];
+    const firstDOW = new Date(calYear, calMonth, 1).getDay();
+    const startOffset = (firstDOW + 6) % 7;
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const cellBase = 'width:34px;height:34px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;padding:0;font-family:inherit';
+    const calCells = [];
+    for (let i = 0; i < startOffset; i++) {
+      calCells.push({ day: '', onClick: null, style: 'width:34px;height:34px;background:transparent;border:none;padding:0;cursor:default' });
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isPast = calYear < today.year ||
+                     (calYear === today.year && calMonth < today.month) ||
+                     (calYear === today.year && calMonth === today.month && d < today.day);
+      const isTodayCell = calYear === today.year && calMonth === today.month && d === today.day;
+      const isSelCell = calYear === selDate.year && calMonth === selDate.month && d === selDate.day;
+      let cellStyle;
+      if (isSelCell) cellStyle = `${cellBase};background:var(--gradRed);color:#fff;box-shadow:var(--shadowRed)`;
+      else if (isTodayCell) cellStyle = `${cellBase};background:transparent;color:#fff;outline:1.5px solid oklch(0.60 0.235 25 / 0.7)`;
+      else if (isPast) cellStyle = `${cellBase};background:transparent;color:oklch(0.78 0 0 / 0.3);cursor:not-allowed`;
+      else cellStyle = `${cellBase};background:transparent;color:oklch(0.78 0 0)`;
+      calCells.push({ day: d, style: cellStyle, onClick: isPast ? null : () => this.selectDate(calYear, calMonth, d) });
+    }
+    const calArrowStyle = 'width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--gray);cursor:pointer;font-size:18px;padding:0;line-height:1;font-family:inherit';
 
     const stBtn = 'border:1px solid var(--border);cursor:pointer;border-radius:8px;background:oklch(0.07 0 0 / .4);padding:8px;font-size:14px;font-weight:800;color:#fff';
     const moviesVm = movies.map((m, idx) => ({
@@ -607,7 +659,9 @@ class Component extends DCLogic {
       trailerOpen: this.state.trailerOpen,
 
       featured: this.featured(),
-      navItems, dayTabs, movies: moviesVm, upcoming: upcomingVm,
+      navItems, movies: moviesVm, upcoming: upcomingVm,
+      calMonthLabel, calDayLabels, calCells, calArrowStyle,
+      prevMonth: this.prevMonth, nextMonth: this.nextMonth,
       isPreorder, dateShort,
       confirmLabel: isPreorder ? 'Preventa confirmada' : 'Compra confirmada',
 
