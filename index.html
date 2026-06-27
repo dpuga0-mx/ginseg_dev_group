@@ -21,15 +21,51 @@
   @keyframes cdcpulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
   .cdc-disp{ font-family:'Bebas Neue',sans-serif; letter-spacing:.02em; }
   image-slot{ display:block; }
+
+  /* ── Tablet (≤ 900 px) ── */
+  @media(max-width:900px){
+    .cdc-hero-grid{grid-template-columns:1fr !important;padding:56px 24px 72px !important}
+    .cdc-hero-poster{display:none !important}
+    .cdc-hero-h1{font-size:80px !important}
+    .cdc-exp-grid{grid-template-columns:1fr 1fr !important}
+    .cdc-promo-grid{grid-template-columns:1fr !important}
+    .cdc-promo-btns{align-items:flex-start !important}
+    .cdc-footer-grid{grid-template-columns:1fr 1fr !important;padding:36px 24px !important;gap:28px !important}
+    .cdc-checkout-grid{grid-template-columns:1fr !important}
+    .cdc-checkout-main{padding:24px 24px 80px !important}
+  }
+
+  /* ── Mobile (≤ 600 px) ── */
+  @media(max-width:600px){
+    .cdc-header-inner{padding:12px 16px 8px !important}
+    .cdc-header-social{display:none !important}
+    .cdc-nav{gap:6px 16px !important;padding-top:10px !important;margin-top:10px !important}
+    .cdc-main{padding:0 16px !important}
+    .cdc-hero-grid{padding:40px 16px 60px !important}
+    .cdc-hero-h1{font-size:54px !important}
+    .cdc-exp-grid{grid-template-columns:1fr !important}
+    .cdc-footer-grid{grid-template-columns:1fr !important;padding:28px 16px !important}
+    .cdc-seat-main{padding:20px 16px 120px !important}
+    .cdc-seat-scroll{overflow-x:auto !important;-webkit-overflow-scrolling:touch !important;padding-bottom:8px !important}
+    .cdc-seat-scroll>div{align-items:flex-start !important;min-width:max-content !important}
+    .cdc-checkout-main{padding:20px 16px 80px !important}
+    .cdc-seat-bar-inner{padding:12px 16px !important}
+  }
+
+  /* ── Small phones (≤ 390 px) ── */
+  @media(max-width:390px){
+    .cdc-hero-h1{font-size:42px !important}
+    .cdc-nav{gap:4px 12px !important}
+  }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
 
   <!-- ================= HEADER ================= -->
   <header style="position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);background:oklch(0.07 0 0 / .9);backdrop-filter:blur(12px)">
-    <div style="max-width:1180px;margin:0 auto;padding:22px 32px 8px;display:flex;flex-direction:column;align-items:center">
+    <div class="cdc-header-inner" style="max-width:1180px;margin:0 auto;padding:22px 32px 8px;display:flex;flex-direction:column;align-items:center">
       <div style="position:relative;display:flex;width:100%;align-items:center;justify-content:center">
-        <div style="position:absolute;left:0;display:flex;gap:12px">
+        <div class="cdc-header-social" style="position:absolute;left:0;display:flex;gap:12px">
           <a href="#" aria-label="Facebook" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
           <a href="#" aria-label="Instagram" style="{{ iconBtnStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         </div>
@@ -48,7 +84,7 @@
         </div>
       </div>
 
-      <nav style="margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 40px;border-top:1px solid var(--border);padding-top:16px;width:100%">
+      <nav class="cdc-nav" style="margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 40px;border-top:1px solid var(--border);padding-top:16px;width:100%">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
           <a href="{{ n.href }}" onClick="{{ n.onClick }}" style="{{ n.style }}">{{ n.label }}</a>
         </sc-for>
@@ -66,12 +102,12 @@
       <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
       <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
 
-      <div style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
+      <div class="cdc-hero-grid" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
         <div>
           <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
           </div>
-          <h1 class="cdc-disp" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ featured.title }}</h1>
+          <h1 class="cdc-disp cdc-hero-h1" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ featured.title }}</h1>
           <p style="margin:12px 0 0;font-size:19px;font-style:italic;color:var(--gray)">"{{ featured.tagline }}"</p>
           <div style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
             <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ featured.score }}/10</span>
@@ -89,7 +125,7 @@
           </div>
         </div>
 
-        <div style="position:relative">
+        <div class="cdc-hero-poster" style="position:relative">
           <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster);outline:1px solid var(--border)">
             <image-slot id="cdc-poster-featured" fit="cover" src="posters/toystory.png" placeholder="Póster Toy Story 5" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
             <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
@@ -105,7 +141,7 @@
       </div>
     </section>
 
-    <main style="max-width:1180px;margin:0 auto;padding:0 32px">
+    <main class="cdc-main" style="max-width:1180px;margin:0 auto;padding:0 32px">
 
       <!-- BILLBOARD -->
       <section id="cartelera" style="padding-top:96px">
@@ -215,7 +251,7 @@
           <h2 class="cdc-disp" style="margin:8px 0 0;font-size:48px;letter-spacing:2px;color:#fff">Experiencias premium</h2>
           <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
         </div>
-        <div style="display:grid;gap:20px;grid-template-columns:repeat(3,1fr)">
+        <div class="cdc-exp-grid" style="display:grid;gap:20px;grid-template-columns:repeat(3,1fr)">
           <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="3">
             <div style="position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--border);background:var(--card);padding:32px">
               <div style="position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:color-mix(in oklab,var(--primary) 12%,transparent);filter:blur(48px)"></div>
@@ -234,13 +270,13 @@
       <section style="padding-top:112px;padding-bottom:112px">
         <div style="position:relative;overflow:hidden;border-radius:24px;border:1px solid color-mix(in oklab,var(--primary) 30%,transparent);background:var(--blue);padding:56px">
           <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 80% 50%, var(--primary) 0%, transparent 55%)"></div>
-          <div style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
+          <div class="cdc-promo-grid" style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
             <div>
               <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Martes 2x1</div>
               <h3 class="cdc-disp" style="margin:12px 0 0;font-size:46px;letter-spacing:1px;color:#fff">Dos entradas. Un precio. Todos los martes.</h3>
               <p style="margin:16px 0 0;max-width:32rem;font-size:16px;color:color-mix(in oklab,#fff 80%,transparent)">Disfruta el mejor cine acompañado. Válido en salas 2D presentando tu credencial Cinemas del Country Club.</p>
             </div>
-            <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+            <div class="cdc-promo-btns" style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
               <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Aprovechar promo</button>
               <span style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Aplican términos y condiciones</span>
             </div>
@@ -251,7 +287,7 @@
 
     <!-- FOOTER -->
     <footer style="border-top:1px solid var(--border);background:oklch(0.07 0 0)">
-      <div style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
+      <div class="cdc-footer-grid" style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
         <div>
           <div style="display:flex;align-items:center;gap:12px">
             <img src="cinemas-logo.png" alt="Cinemas del Country" style="width:46px;height:46px;object-fit:contain" />
@@ -284,7 +320,7 @@
 
   <!-- ================= SEATS ================= -->
   <sc-if value="{{ isSeats }}" hint-placeholder-val="{{ true }}">
-  <main style="max-width:780px;margin:0 auto;padding:34px 32px 140px">
+  <main class="cdc-seat-main" style="max-width:780px;margin:0 auto;padding:34px 32px 140px">
     <button onClick="{{ goHome }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:14px">← Volver a la cartelera</button>
     <div style="text-align:center;margin-bottom:30px">
       <sc-if value="{{ isPreorder }}" hint-placeholder-val="{{ false }}">
@@ -297,7 +333,7 @@
     <div class="cdc-disp" style="text-align:center;font-size:14px;letter-spacing:10px;color:var(--gray)">PANTALLA</div>
     <div style="height:30px;width:80%;margin:8px auto 38px;border-top:3px solid var(--primary);border-radius:50% / 100% 100% 0 0;box-shadow:0 -12px 30px -12px var(--primary)"></div>
 
-    <div style="display:flex;flex-direction:column;gap:9px;align-items:center;margin-bottom:34px">
+    <div class="cdc-seat-scroll"><div style="display:flex;flex-direction:column;gap:9px;align-items:center;margin-bottom:34px">
       <sc-for list="{{ seatRows }}" as="row" hint-placeholder-count="8">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
@@ -309,7 +345,7 @@
           <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
         </div>
       </sc-for>
-    </div>
+    </div></div>
 
     <div style="display:flex;justify-content:center;gap:22px;flex-wrap:wrap;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">
       <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;border:1px solid var(--gray);background:var(--card)"></span>Disponible</div>
@@ -320,7 +356,7 @@
   </main>
 
   <div style="position:fixed;left:0;right:0;bottom:0;z-index:40;background:oklch(0.07 0 0 / .96);border-top:1px solid var(--border);backdrop-filter:blur(12px)">
-    <div style="max-width:780px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+    <div class="cdc-seat-bar-inner" style="max-width:780px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px">
       <div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ seatCountLabel }}</div>
         <div style="font-size:14px;font-weight:700;color:#fff;max-width:34ch">{{ seatListLabel }}</div>
@@ -338,10 +374,10 @@
 
   <!-- ================= CHECKOUT ================= -->
   <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ true }}">
-  <main style="max-width:980px;margin:0 auto;padding:34px 32px 100px">
+  <main class="cdc-checkout-main" style="max-width:980px;margin:0 auto;padding:34px 32px 100px">
     <button onClick="{{ backToSeats }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:18px">← Volver a asientos</button>
     <h1 class="cdc-disp" style="margin:0 0 28px;font-size:44px;letter-spacing:1px;color:#fff">Confirmar y pagar</h1>
-    <div style="display:grid;grid-template-columns:1fr 360px;gap:42px;align-items:start">
+    <div class="cdc-checkout-grid" style="display:grid;grid-template-columns:1fr 360px;gap:42px;align-items:start">
       <div style="display:flex;flex-direction:column;gap:26px">
         <div>
           <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Datos del comprador</div>
