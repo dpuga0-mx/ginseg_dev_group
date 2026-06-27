@@ -115,22 +115,30 @@
             <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Cartelera</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="border-radius:16px;border:1px solid var(--border);background:var(--card);padding:14px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <button onClick="{{ prevMonth }}" style="{{ calArrowStyle }}">‹</button>
-              <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ calMonthLabel }}</span>
-              <button onClick="{{ nextMonth }}" style="{{ calArrowStyle }}">›</button>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px;margin-bottom:4px">
-              <sc-for list="{{ calDayLabels }}" as="dn" hint-placeholder-count="7">
-                <div style="text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);padding:4px 0">{{ dn }}</div>
-              </sc-for>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px">
-              <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
-                <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.day }}</button>
-              </sc-for>
-            </div>
+          <div style="position:relative">
+            <button onClick="{{ toggleCal }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);cursor:pointer;border-radius:30px;background:var(--card);padding:10px 18px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              {{ calBtnLabel }}
+            </button>
+            <sc-if value="{{ calOpen }}">
+              <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:20;border-radius:16px;border:1px solid var(--border);background:var(--card);padding:14px;box-shadow:0 20px 40px -10px oklch(0 0 0 / 0.6)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <button onClick="{{ prevMonth }}" style="{{ calArrowStyle }}">‹</button>
+                  <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ calMonthLabel }}</span>
+                  <button onClick="{{ nextMonth }}" style="{{ calArrowStyle }}">›</button>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px;margin-bottom:4px">
+                  <sc-for list="{{ calDayLabels }}" as="dn" hint-placeholder-count="7">
+                    <div style="text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);padding:4px 0">{{ dn }}</div>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px">
+                  <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                    <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.day }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
           </div>
         </div>
 
@@ -447,6 +455,7 @@
 class Component extends DCLogic {
   state = {
     screen: 'home',
+    calOpen: false,
     calYear: new Date().getFullYear(),
     calMonth: new Date().getMonth(),
     selectedDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
@@ -512,7 +521,8 @@ class Component extends DCLogic {
     if (calMonth === 11) this.setState({ calYear: calYear + 1, calMonth: 0 });
     else this.setState({ calMonth: calMonth + 1 });
   };
-  selectDate = (year, month, day) => this.setState({ selectedDate: { year, month, day } });
+  toggleCal = () => this.setState(s => ({ calOpen: !s.calOpen }));
+  selectDate = (year, month, day) => this.setState({ selectedDate: { year, month, day }, calOpen: false });
   toggleSeat = (id) => this.setState(s => ({ seats: s.seats.includes(id) ? s.seats.filter(x=>x!==id) : [...s.seats, id] }));
   setForm = (field, val) => this.setState(s => ({ form: { ...s.form, [field]: val }, formError: '' }));
   goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout', formError: '' }); window.scrollTo(0,0); } };
@@ -660,8 +670,9 @@ class Component extends DCLogic {
 
       featured: this.featured(),
       navItems, movies: moviesVm, upcoming: upcomingVm,
+      calOpen: this.state.calOpen, calBtnLabel: dateLabel,
       calMonthLabel, calDayLabels, calCells, calArrowStyle,
-      prevMonth: this.prevMonth, nextMonth: this.nextMonth,
+      prevMonth: this.prevMonth, nextMonth: this.nextMonth, toggleCal: this.toggleCal,
       isPreorder, dateShort,
       confirmLabel: isPreorder ? 'Preventa confirmada' : 'Compra confirmada',
 
