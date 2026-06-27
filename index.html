@@ -326,17 +326,17 @@
         <div>
           <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Datos del comprador</div>
           <div style="display:flex;flex-direction:column;gap:12px">
-            <input placeholder="Nombre completo" style="{{ inputStyle }}" />
-            <input placeholder="Correo electrónico" style="{{ inputStyle }}" />
+            <input placeholder="Nombre completo" value="{{ form.name }}" onChange="{{ onInputName }}" style="{{ inputStyle }}" />
+            <input placeholder="Correo electrónico" value="{{ form.email }}" onChange="{{ onInputEmail }}" style="{{ inputStyle }}" />
           </div>
         </div>
         <div>
           <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Método de pago</div>
           <div style="display:flex;flex-direction:column;gap:12px">
-            <input placeholder="Número de tarjeta" style="{{ inputStyle }}" />
+            <input placeholder="Número de tarjeta" value="{{ form.card }}" onChange="{{ onInputCard }}" style="{{ inputStyle }}" />
             <div style="display:flex;gap:12px">
-              <input placeholder="MM / AA" style="{{ inputStyle }};flex:1" />
-              <input placeholder="CVV" style="{{ inputStyle }};flex:1" />
+              <input placeholder="MM / AA" value="{{ form.expiry }}" onChange="{{ onInputExpiry }}" style="{{ inputStyle }};flex:1" />
+              <input placeholder="CVV" value="{{ form.cvv }}" onChange="{{ onInputCvv }}" style="{{ inputStyle }};flex:1" />
             </div>
           </div>
         </div>
@@ -357,6 +357,9 @@
           <span class="cdc-disp" style="font-size:20px;letter-spacing:1px;color:#fff">TOTAL</span>
           <span class="cdc-disp" style="font-size:30px;color:var(--primary)">{{ grandTotalLabel }}</span>
         </div>
+        <sc-if value="{{ formError }}">
+          <div style="margin-bottom:12px;padding:10px 14px;border-radius:8px;background:oklch(0.60 0.235 25 / 0.12);border:1px solid oklch(0.60 0.235 25 / 0.4);font-size:12px;color:#ffaaaa;text-align:center">{{ formError }}</div>
+        </sc-if>
         <button onClick="{{ confirmPurchase }}" style="width:100%;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Pagar {{ grandTotalLabel }}</button>
         <div style="margin-top:12px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Pago seguro · Cancelación hasta 2h antes</div>
       </div>
@@ -438,7 +441,8 @@ class Component extends DCLogic {
     seats: [],
     trailerOpen: false,
     source: 'movies',
-    bookingCode: null,
+    form: { name: '', email: '', card: '', expiry: '', cvv: '' },
+    formError: '',
   };
 
   featured() {
@@ -486,11 +490,16 @@ class Component extends DCLogic {
   buyFeatured = () => this.openSeats(0, this.movieData()[0].schedule[0]);
   setDay = (i) => this.setState({ day:i });
   toggleSeat = (id) => this.setState(s => ({ seats: s.seats.includes(id) ? s.seats.filter(x=>x!==id) : [...s.seats, id] }));
-  goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout' }); window.scrollTo(0,0); } };
+  setForm = (field, val) => this.setState(s => ({ form: { ...s.form, [field]: val }, formError: '' }));
+  goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout', formError: '' }); window.scrollTo(0,0); } };
   backToSeats = () => { this.setState({ screen:'seats' }); window.scrollTo(0,0); };
   confirmPurchase = () => {
-    const code = 'CDC-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    this.setState({ screen:'confirm', bookingCode: code });
+    const f = this.state.form;
+    if (!f.name.trim() || !f.email.trim() || !f.card.trim() || !f.expiry.trim() || !f.cvv.trim()) {
+      this.setState({ formError: 'Por favor completa todos los campos antes de continuar.' });
+      return;
+    }
+    this.setState({ screen:'confirm', formError: '' });
     window.scrollTo(0,0);
   };
   openTrailer = () => this.setState({ trailerOpen:true });
@@ -502,11 +511,10 @@ class Component extends DCLogic {
     const upcoming = this.upcomingData();
     const isPreorder = this.state.source === 'upcoming';
     const selList = isPreorder ? upcoming : movies;
-    const _rawSel = selList[this.state.movieIndex] || movies[0];
-    const sel = { ..._rawSel, format: _rawSel.format || (_rawSel.formats && _rawSel.formats[0]) || '' };
-    const _now = new Date();
-    const _months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : `Hoy, ${_now.getDate()} ${_months[_now.getMonth()]}`;
+    const selBase = selList[this.state.movieIndex] || movies[0];
+    const sel = { ...selBase, format: selBase.format || (selBase.formats && selBase.formats[0]) || '' };
+    const dayNames = ['Hoy, 26 jun', 'Mañana, 27 jun', 'Sáb 28 jun', 'Dom 29 jun'];
+    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : dayNames[this.state.day];
     const occupied = new Set(['A1','A2','C5','C6','D8','E3','F10','F11','B7','H4','H5','G2','D1','E9','A11','C2']);
 
     const rootStyle = [
@@ -523,7 +531,7 @@ class Component extends DCLogic {
     ].join(';');
 
     const iconBtnStyle = 'display:grid;place-items:center;height:36px;width:36px;border-radius:50%;border:1px solid var(--border);color:color-mix(in oklab,#fff 80%,transparent);text-decoration:none';
-    const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%;outline:none';
+    const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%';
 
     const navLabels = ['Home','Cartelera','Próximamente','Promociones','Contacto'];
     const navItems = navLabels.map((label, i) => ({
@@ -623,7 +631,15 @@ class Component extends DCLogic {
       feeLabel: this.mxn(fee),
       grandTotalLabel: this.mxn(grand),
       continueStyle: `border:none;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:13px 30px;border-radius:30px;color:#fff;${hasSeats ? 'background:var(--gradRed);cursor:pointer;box-shadow:var(--shadowRed)' : 'background:var(--border);cursor:not-allowed;opacity:.6'}`,
-      qrCells, bookingCode: this.state.bookingCode || '',
+      qrCells, bookingCode:'CDC-7F2A9',
+
+      form: this.state.form,
+      formError: this.state.formError,
+      onInputName: (e) => this.setForm('name', e.target.value),
+      onInputEmail: (e) => this.setForm('email', e.target.value),
+      onInputCard: (e) => this.setForm('card', e.target.value),
+      onInputExpiry: (e) => this.setForm('expiry', e.target.value),
+      onInputCvv: (e) => this.setForm('cvv', e.target.value),
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
