@@ -59,6 +59,11 @@
     .cdc-hero-h1{font-size:42px !important}
     .cdc-nav{gap:4px 12px !important}
   }
+
+  /* ── Upcoming slider ── */
+  @media(max-width:600px){
+    .cdc-slide-card{min-width:calc(100vw - 56px) !important;width:calc(100vw - 56px) !important}
+  }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -221,28 +226,42 @@
             <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ prevSlide }}" style="{{ prevSlideStyle }}">‹</button>
+              <button onClick="{{ nextSlide }}" style="{{ nextSlideStyle }}">›</button>
+            </div>
+          </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
-          <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
-            <article style="position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
-              <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
-                <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-                <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
-                <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
-                <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
-                  <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
-                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
+        <div style="overflow:hidden">
+          <div style="display:flex;gap:24px;transition:transform .45s cubic-bezier(.25,.46,.45,.94);transform:{{ slideTransform }}">
+            <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
+              <article class="cdc-slide-card" style="min-width:280px;width:280px;flex:none;position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
+                <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
+                  <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                  <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+                  <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
+                  <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
+                    <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
+                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
+                  </div>
                 </div>
-              </div>
-              <div style="display:flex;flex:1;flex-direction:column;padding:20px">
-                <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
-                <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
-                <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
-                <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
-              </div>
-            </article>
+                <div style="display:flex;flex:1;flex-direction:column;padding:20px">
+                  <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
+                  <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
+                  <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
+                  <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;gap:10px;margin-top:28px">
+          <sc-for list="{{ upcomingDots }}" as="dot" hint-placeholder-count="4">
+            <button onClick="{{ dot.onClick }}" style="{{ dot.style }}"></button>
           </sc-for>
         </div>
       </section>
@@ -680,6 +699,7 @@ class Component extends DCLogic {
     payMethod: 'card',
     copied: false,
     ownerAuth: false,
+    upcomingSlide: 0,
     pin: '',
     pinError: false,
     deposits: [
@@ -810,6 +830,8 @@ class Component extends DCLogic {
       window.scrollTo(0,0);
     }, 1700);
   };
+  prevSlide = () => this.setState(s => ({ upcomingSlide: Math.max(0, s.upcomingSlide - 1) }));
+  nextSlide = () => this.setState(s => ({ upcomingSlide: Math.min(this.upcomingData().length - 1, s.upcomingSlide + 1) }));
   openTrailer = () => this.setState({ trailerOpen:true });
   closeTrailer = () => this.setState({ trailerOpen:false });
 
@@ -938,6 +960,19 @@ class Component extends DCLogic {
       qrCells.push({ style:`border-radius:1px;background:${on ? '#0a0a0a' : 'transparent'}` });
     }
 
+    // ── upcoming slider ──
+    const upcomingSlide = this.state.upcomingSlide;
+    const upcomingCount = upcoming.length;
+    const slideStep = 280 + 24;
+    const slideTransform = upcomingSlide > 0 ? `translateX(-${upcomingSlide * slideStep}px)` : 'none';
+    const arrowBase = 'width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:#fff;cursor:pointer;font-size:24px;padding:0;line-height:1;font-family:inherit;display:grid;place-items:center;transition:opacity .2s';
+    const prevSlideStyle = `${arrowBase};${upcomingSlide === 0 ? 'opacity:.3;cursor:not-allowed' : 'opacity:1'}`;
+    const nextSlideStyle = `${arrowBase};${upcomingSlide >= upcomingCount - 1 ? 'opacity:.3;cursor:not-allowed' : 'opacity:1'}`;
+    const upcomingDots = upcoming.map((_, i) => ({
+      onClick: i !== upcomingSlide ? () => this.setState({ upcomingSlide: i }) : null,
+      style: `width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;${i === upcomingSlide ? 'background:var(--primary);width:24px;border-radius:4px' : 'background:oklch(1 0 0 / 20%)'}`,
+    }));
+
     // ── payouts / bank ──
     const banks = [
       { id:'bbva', name:'BBVA' }, { id:'banorte', name:'Banorte' },
@@ -1054,6 +1089,9 @@ class Component extends DCLogic {
 
       pinDots, keypadVm, pinError:this.state.pinError, accessHint:'Código demo: 2470',
       pressPin:this.pressPin, backPin:this.backPin,
+
+      slideTransform, prevSlideStyle, nextSlideStyle, upcomingDots,
+      prevSlide: this.prevSlide, nextSlide: this.nextSlide,
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
