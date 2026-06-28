@@ -235,7 +235,7 @@
           </div>
         </div>
 
-        <div style="overflow:hidden">
+        <div style="overflow:hidden;touch-action:pan-y" onMouseEnter="{{ pauseSlider }}" onMouseLeave="{{ resumeSlider }}" onTouchStart="{{ handleTouchStart }}" onTouchEnd="{{ handleTouchEnd }}">
           <div style="display:flex;gap:24px;transition:transform .45s cubic-bezier(.25,.46,.45,.94);transform:{{ slideTransform }}">
             <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
               <article class="cdc-slide-card" style="min-width:280px;width:280px;flex:none;position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
@@ -830,8 +830,22 @@ class Component extends DCLogic {
       window.scrollTo(0,0);
     }, 1700);
   };
-  prevSlide = () => this.setState(s => ({ upcomingSlide: Math.max(0, s.upcomingSlide - 1) }));
-  nextSlide = () => this.setState(s => ({ upcomingSlide: Math.min(this.upcomingData().length - 1, s.upcomingSlide + 1) }));
+  _startSlider() {
+    if (this._slideTimer) return;
+    this._slideTimer = setInterval(() => {
+      this.setState(s => ({ upcomingSlide: (s.upcomingSlide + 1) % this.upcomingData().length }));
+    }, 3500);
+  }
+  _stopSlider() { clearInterval(this._slideTimer); this._slideTimer = null; }
+  prevSlide = () => { this._stopSlider(); this.setState(s => ({ upcomingSlide: (s.upcomingSlide - 1 + this.upcomingData().length) % this.upcomingData().length })); this._startSlider(); };
+  nextSlide = () => { this._stopSlider(); this.setState(s => ({ upcomingSlide: (s.upcomingSlide + 1) % this.upcomingData().length })); this._startSlider(); };
+  pauseSlider = () => this._stopSlider();
+  resumeSlider = () => this._startSlider();
+  handleTouchStart = (e) => { this._touchX = e.touches[0].clientX; };
+  handleTouchEnd = (e) => {
+    const dx = this._touchX - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) { dx > 0 ? this.nextSlide() : this.prevSlide(); }
+  };
   openTrailer = () => this.setState({ trailerOpen:true });
   closeTrailer = () => this.setState({ trailerOpen:false });
 
@@ -961,16 +975,16 @@ class Component extends DCLogic {
     }
 
     // ── upcoming slider ──
+    if (!this._sliderStarted) { this._sliderStarted = true; this._startSlider(); }
     const upcomingSlide = this.state.upcomingSlide;
-    const upcomingCount = upcoming.length;
     const slideStep = 280 + 24;
     const slideTransform = upcomingSlide > 0 ? `translateX(-${upcomingSlide * slideStep}px)` : 'none';
-    const arrowBase = 'width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:#fff;cursor:pointer;font-size:24px;padding:0;line-height:1;font-family:inherit;display:grid;place-items:center;transition:opacity .2s';
-    const prevSlideStyle = `${arrowBase};${upcomingSlide === 0 ? 'opacity:.3;cursor:not-allowed' : 'opacity:1'}`;
-    const nextSlideStyle = `${arrowBase};${upcomingSlide >= upcomingCount - 1 ? 'opacity:.3;cursor:not-allowed' : 'opacity:1'}`;
+    const arrowBase = 'width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:#fff;cursor:pointer;font-size:24px;padding:0;line-height:1;font-family:inherit;display:grid;place-items:center';
+    const prevSlideStyle = arrowBase;
+    const nextSlideStyle = arrowBase;
     const upcomingDots = upcoming.map((_, i) => ({
-      onClick: i !== upcomingSlide ? () => this.setState({ upcomingSlide: i }) : null,
-      style: `width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;${i === upcomingSlide ? 'background:var(--primary);width:24px;border-radius:4px' : 'background:oklch(1 0 0 / 20%)'}`,
+      onClick: () => { this._stopSlider(); this.setState({ upcomingSlide: i }); this._startSlider(); },
+      style: `height:8px;border-radius:4px;border:none;padding:0;cursor:pointer;transition:all .3s;${i === upcomingSlide ? 'width:24px;background:var(--primary)' : 'width:8px;background:oklch(1 0 0 / 20%)'}`,
     }));
 
     // ── payouts / bank ──
@@ -1092,6 +1106,8 @@ class Component extends DCLogic {
 
       slideTransform, prevSlideStyle, nextSlideStyle, upcomingDots,
       prevSlide: this.prevSlide, nextSlide: this.nextSlide,
+      pauseSlider: this.pauseSlider, resumeSlider: this.resumeSlider,
+      handleTouchStart: this.handleTouchStart, handleTouchEnd: this.handleTouchEnd,
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
