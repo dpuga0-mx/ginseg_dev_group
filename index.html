@@ -60,8 +60,8 @@
     .cdc-nav{gap:4px 12px !important}
   }
 
-  /* ── Week releases carousel ── */
-  #cdc-week-carousel::-webkit-scrollbar{ display:none; }
+  /* ── Hero slider ── */
+  #cdc-hero-slider::-webkit-scrollbar{ display:none; }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -102,50 +102,60 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
   <div>
 
-    <!-- HERO -->
-    <section style="position:relative;overflow:hidden;isolation:isolate">
-      <image-slot id="cdc-hero-bg" fit="cover" src="posters/toystory.png" placeholder="Imagen de sala (hero)" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5"></image-slot>
-      <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
-      <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
+    <!-- HERO CAROUSEL -->
+    <div style="position:relative">
+      <div id="cdc-hero-slider" style="display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;scrollbar-width:none">
+        <sc-for list="{{ heroMoviesVm }}" as="h" hint-placeholder-count="7">
+          <div style="flex:none;width:100%;scroll-snap-align:start;position:relative;overflow:hidden;isolation:isolate">
+            <image-slot id="{{ h.bgSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="Imagen de fondo" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5"></image-slot>
+            <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
+            <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
 
-      <div class="cdc-hero-grid" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
-        <div>
-          <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
-          </div>
-          <h1 class="cdc-disp cdc-hero-h1" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ featured.title }}</h1>
-          <p style="margin:12px 0 0;font-size:19px;font-style:italic;color:var(--gray)">"{{ featured.tagline }}"</p>
-          <div style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
-            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ featured.score }}/10</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span>{{ featured.genre }}</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ featured.duration }}</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span style="border:1px solid color-mix(in oklab, #fff 30%, transparent);border-radius:4px;padding:1px 7px;font-size:10px">{{ featured.rating }}</span>
-          </div>
-          <p style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:color-mix(in oklab, #fff 80%, transparent)">{{ featured.synopsis }}</p>
-          <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
-            <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;gap:12px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
-            <button onClick="{{ openTrailer }}" style="display:inline-flex;align-items:center;gap:12px;cursor:pointer;border-radius:30px;border:1px solid color-mix(in oklab, #fff 30%, transparent);background:color-mix(in oklab, #fff 5%, transparent);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
-          </div>
-        </div>
-
-        <div class="cdc-hero-poster" style="position:relative">
-          <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster);outline:1px solid var(--border)">
-            <image-slot id="cdc-poster-featured" fit="cover" src="posters/toystory.png" placeholder="Póster Toy Story 5" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-            <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
-            <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
+            <div class="cdc-hero-grid" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
               <div>
-                <div class="cdc-disp" style="font-size:22px;color:#fff">EN CARTELERA</div>
-                <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">Desde el 24 de Junio</div>
+                <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
+                  <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
+                </div>
+                <h1 class="cdc-disp cdc-hero-h1" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ h.title }}</h1>
+                <div style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
+                  <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ h.score }}/10</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span>{{ h.genre }}</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ h.duration }}</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span style="border:1px solid color-mix(in oklab, #fff 30%, transparent);border-radius:4px;padding:1px 7px;font-size:10px">{{ h.rating }}</span>
+                </div>
+                <p style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:color-mix(in oklab, #fff 80%, transparent)">{{ h.synopsis }}</p>
+                <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
+                  <button onClick="{{ h.onBuy }}" style="display:inline-flex;align-items:center;gap:12px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
+                  <button onClick="{{ openTrailer }}" style="display:inline-flex;align-items:center;gap:12px;cursor:pointer;border-radius:30px;border:1px solid color-mix(in oklab, #fff 30%, transparent);background:color-mix(in oklab, #fff 5%, transparent);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
+                </div>
               </div>
-              <span style="border-radius:30px;background:var(--primary);padding:4px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">IMAX</span>
+
+              <div class="cdc-hero-poster" style="position:relative">
+                <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster);outline:1px solid var(--border)">
+                  <image-slot id="{{ h.posterSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="{{ h.title }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                  <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
+                    <div>
+                      <div class="cdc-disp" style="font-size:22px;color:#fff">EN CARTELERA</div>
+                      <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">Sala {{ h.sala }}</div>
+                    </div>
+                    <span style="border-radius:30px;background:var(--primary);padding:4px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ h.firstFormat }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </sc-for>
       </div>
-    </section>
+      <div style="position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:10">
+        <sc-for list="{{ heroDots }}" as="d" hint-placeholder-count="7">
+          <div style="{{ d.style }}"></div>
+        </sc-for>
+      </div>
+    </div>
 
     <main class="cdc-main" style="max-width:1180px;margin:0 auto;padding:0 32px">
 
@@ -216,28 +226,24 @@
         </div>
       </section>
 
-      <!-- ESTRENOS DE LA SEMANA (carousel) -->
+      <!-- PRÓXIMOS ESTRENOS -->
       <section id="proximamente" style="padding-top:112px">
         <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
           <div style="position:relative">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Esta semana en cartelera</div>
-            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Estrenos de la semana</h2>
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Reserva antes que nadie</div>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px">
-            <sc-for list="{{ weekDots }}" as="dot" hint-placeholder-count="4">
-              <div style="{{ dot.style }}"></div>
-            </sc-for>
-          </div>
+          <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
         </div>
 
-        <div id="cdc-week-carousel" style="display:flex;gap:20px;overflow-x:scroll;overflow-y:visible;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:12px;-webkit-overflow-scrolling:touch">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
           <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
-            <article style="flex:none;width:clamp(260px,75vw,300px);scroll-snap-align:start;position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
+            <article style="position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
               <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
                 <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
                 <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
-                <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Estreno</div>
+                <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
                 <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
                   <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
                   <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
@@ -247,7 +253,7 @@
                 <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
                 <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
                 <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
-                <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar</button>
+                <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
               </div>
             </article>
           </sc-for>
@@ -687,7 +693,7 @@ class Component extends DCLogic {
     payMethod: 'card',
     copied: false,
     ownerAuth: false,
-    weekSlide: 0,
+    heroSlide: 0,
     pin: '',
     pinError: false,
     deposits: [
@@ -712,13 +718,13 @@ class Component extends DCLogic {
 
   movieData() {
     return [
-      { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'] },
-      { title:'Leviticus: Ritual de Sangre', genre:'Terror', duration:'1h 28m', rating:'B15', score:'7.4', sala:'5', formats:['ESP'], poster:'posters/leviticus.png', schedule:['6:00','7:40','9:20'] },
-      { title:'Disclosure Day', genre:'Ciencia Ficción', duration:'2h 26m', rating:'B', score:'8.1', sala:'2', formats:['ESP','SUB'], poster:'posters/disclosure.png', schedule:['12:30','3:10','6:00','8:40'] },
-      { title:'Letras Robadas', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'7.8', sala:'6', formats:['ESP'], poster:'posters/letras.png', schedule:['4:00'] },
-      { title:'Amos del Universo', genre:'Fantasía', duration:'2h 21m', rating:'TBC', score:'8.3', sala:'3', formats:['ESP'], poster:'posters/amos.png', schedule:['3:20'] },
-      { title:'Scary Movie 6', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'6.9', sala:'4', formats:['ESP','SUB'], poster:'posters/scary.png', schedule:['1:15','3:15','5:15','7:15','9:15'] },
-      { title:'Backrooms: Sin Salida', genre:'Suspenso', duration:'1h 50m', rating:'TBC', score:'7.2', sala:'7', formats:['ESP'], poster:'posters/backrooms.png', schedule:['6:00','8:00'] },
+      { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'], synopsis:'Woody, Buzz y los amigos de Andy se enfrentan a nuevos cambios y aventuras que pondrán a prueba su amistad.' },
+      { title:'Leviticus: Ritual de Sangre', genre:'Terror', duration:'1h 28m', rating:'B15', score:'7.4', sala:'5', formats:['ESP'], poster:'posters/leviticus.png', schedule:['6:00','7:40','9:20'], synopsis:'Un antiguo ritual convoca fuerzas oscuras que amenazan con consumir todo a su paso.' },
+      { title:'Disclosure Day', genre:'Ciencia Ficción', duration:'2h 26m', rating:'B', score:'8.1', sala:'2', formats:['ESP','SUB'], poster:'posters/disclosure.png', schedule:['12:30','3:10','6:00','8:40'], synopsis:'Un exanalista de la CIA revela documentos clasificados que cambian para siempre la historia de la humanidad.' },
+      { title:'Letras Robadas', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'7.8', sala:'6', formats:['ESP'], poster:'posters/letras.png', schedule:['4:00'], synopsis:'Una comedia caótica sobre dos aspirantes a escritores cuya rivalidad se convierte en una aventura imprevista.' },
+      { title:'Amos del Universo', genre:'Fantasía', duration:'2h 21m', rating:'TBC', score:'8.3', sala:'3', formats:['ESP'], poster:'posters/amos.png', schedule:['3:20'], synopsis:'He-Man regresa al mundo real para detener al malvado Skeletor antes de que domine el universo entero.' },
+      { title:'Scary Movie 6', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'6.9', sala:'4', formats:['ESP','SUB'], poster:'posters/scary.png', schedule:['1:15','3:15','5:15','7:15','9:15'], synopsis:'El regreso de la parodia más irreverente con nuevas víctimas, más absurdos y risas garantizadas.' },
+      { title:'Backrooms: Sin Salida', genre:'Suspenso', duration:'1h 50m', rating:'TBC', score:'7.2', sala:'7', formats:['ESP'], poster:'posters/backrooms.png', schedule:['6:00','8:00'], synopsis:'Un grupo de exploradores queda atrapado en infinitas habitaciones amarillas donde la realidad no existe.' },
     ];
   }
 
@@ -818,30 +824,14 @@ class Component extends DCLogic {
       window.scrollTo(0,0);
     }, 1700);
   };
-  _startSlider() {
-    if (this._slideTimer) return;
-    this._slideTimer = setInterval(() => {
-      this.setState(s => ({ upcomingSlide: (s.upcomingSlide + 1) % this.upcomingData().length }));
-    }, 3500);
-  }
-  _stopSlider() { clearInterval(this._slideTimer); this._slideTimer = null; }
-  prevSlide = () => { this._stopSlider(); this.setState(s => ({ upcomingSlide: (s.upcomingSlide - 1 + this.upcomingData().length) % this.upcomingData().length })); this._startSlider(); };
-  nextSlide = () => { this._stopSlider(); this.setState(s => ({ upcomingSlide: (s.upcomingSlide + 1) % this.upcomingData().length })); this._startSlider(); };
-  pauseSlider = () => this._stopSlider();
-  resumeSlider = () => this._startSlider();
-  handleTouchStart = (e) => { this._touchX = e.touches[0].clientX; };
-  handleTouchEnd = (e) => {
-    const dx = this._touchX - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 40) { dx > 0 ? this.nextSlide() : this.prevSlide(); }
-  };
   openTrailer = () => this.setState({ trailerOpen:true });
   closeTrailer = () => this.setState({ trailerOpen:false });
 
   componentDidMount() {
-    this._carouselTimer = setInterval(() => this._carouselTick(), 3500);
+    this._heroTimer = setInterval(() => this._heroTick(), 3500);
   }
   componentDidUpdate() {
-    const el = document.getElementById('cdc-week-carousel');
+    const el = document.getElementById('cdc-hero-slider');
     if (el && !el._cdcListened) {
       el._cdcListened = true;
       el.addEventListener('touchstart', () => {
@@ -850,27 +840,24 @@ class Component extends DCLogic {
         this._pauseResume = setTimeout(() => { this._userPaused = false; }, 5000);
       }, { passive:true });
       el.addEventListener('scroll', () => {
-        const a = el.querySelector('article');
-        if (!a) return;
-        const slide = Math.round(el.scrollLeft / (a.offsetWidth + 20));
-        if (slide !== this.state.weekSlide) this.setState({ weekSlide: slide });
+        if (!el.clientWidth) return;
+        const slide = Math.round(el.scrollLeft / el.clientWidth);
+        if (slide !== this.state.heroSlide) this.setState({ heroSlide: slide });
       }, { passive:true });
     }
   }
   componentWillUnmount() {
-    clearInterval(this._carouselTimer);
+    clearInterval(this._heroTimer);
     clearTimeout(this._pauseResume);
   }
-  _carouselTick() {
+  _heroTick() {
     if (this._userPaused) return;
-    const el = document.getElementById('cdc-week-carousel');
-    if (!el) return;
-    const a = el.querySelector('article');
-    if (!a) return;
-    const count = el.querySelectorAll('article').length;
-    const next = this.state.weekSlide >= count - 1 ? 0 : this.state.weekSlide + 1;
-    el.scrollTo({ left: next * (a.offsetWidth + 20), behavior:'smooth' });
-    this.setState({ weekSlide: next });
+    const el = document.getElementById('cdc-hero-slider');
+    if (!el || !el.clientWidth) return;
+    const count = this.movieData().length;
+    const next = this.state.heroSlide >= count - 1 ? 0 : this.state.heroSlide + 1;
+    el.scrollTo({ left: next * el.clientWidth, behavior:'smooth' });
+    this.setState({ heroSlide: next });
   }
 
   renderVals() {
@@ -963,8 +950,15 @@ class Component extends DCLogic {
       onPreorder: () => this.openPreorder(idx),
     }));
 
-    const weekDots = upcoming.map((_, i) => ({
-      style: `width:${i === this.state.weekSlide ? '24px' : '8px'};height:8px;border-radius:4px;background:${i === this.state.weekSlide ? 'var(--primary)' : 'oklch(1 0 0 / 25%)'};transition:all .35s ease`,
+    const heroDots = movies.map((_, i) => ({
+      style: `width:${i === this.state.heroSlide ? '24px' : '8px'};height:8px;border-radius:4px;background:${i === this.state.heroSlide ? 'var(--primary)' : 'oklch(1 0 0 / 25%)'};transition:all .35s ease`,
+    }));
+    const heroMoviesVm = movies.map((m, i) => ({
+      ...m,
+      bgSlotId: 'cdc-hero-bg-' + i,
+      posterSlotId: 'cdc-hero-poster-' + i,
+      firstFormat: m.formats[0] || '',
+      onBuy: () => this.openSeats(i, m.schedule[0]),
     }));
 
     // seats
@@ -1064,7 +1058,7 @@ class Component extends DCLogic {
       payProcessing: this.state.payProcessing,
 
       featured: this.featured(),
-      navItems, movies: moviesVm, upcoming: upcomingVm, weekDots,
+      navItems, movies: moviesVm, upcoming: upcomingVm, heroDots, heroMoviesVm,
       calOpen: this.state.calOpen, calBtnLabel: dateLabel,
       calMonthLabel, calDayLabels, calCells, calArrowStyle,
       prevMonth: this.prevMonth, nextMonth: this.nextMonth, toggleCal: this.toggleCal,
