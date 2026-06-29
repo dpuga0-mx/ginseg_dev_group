@@ -73,6 +73,15 @@
     .cdc-header-settings{ display:none !important; }
     .cdc-header-buy{ display:none !important; }
   }
+
+  /* ── image-slot: never block touch / pointer ── */
+  image-slot{ touch-action:pan-y; pointer-events:none !important; }
+
+  /* ── Calendar dropdown: keep inside viewport on mobile ── */
+  .cdc-cal-dropdown{ position:absolute;right:0;top:calc(100% + 8px);z-index:20;border-radius:16px;border:1px solid var(--border);background:var(--card);padding:14px;box-shadow:0 20px 40px -10px oklch(0 0 0 / 0.6) }
+  @media(max-width:700px){
+    .cdc-cal-dropdown{ right:auto !important; left:0 !important; max-width:calc(100vw - 32px) !important; }
+  }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -184,7 +193,7 @@
               {{ calBtnLabel }}
             </button>
             <sc-if value="{{ calOpen }}">
-              <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:20;border-radius:16px;border:1px solid var(--border);background:var(--card);padding:14px;box-shadow:0 20px 40px -10px oklch(0 0 0 / 0.6)">
+              <div class="cdc-cal-dropdown">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                   <button onClick="{{ prevMonth }}" style="{{ calArrowStyle }}">‹</button>
                   <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ calMonthLabel }}</span>
