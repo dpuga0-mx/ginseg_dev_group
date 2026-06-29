@@ -48,6 +48,7 @@
     .cdc-hero-synopsis{display:none !important}
     .cdc-hero-btns{flex-direction:column !important}
     .cdc-hero-btns button{width:100% !important}
+    .cdc-header-buy{display:none !important}
     .cdc-exp-grid{grid-template-columns:1fr !important}
     .cdc-footer-grid{grid-template-columns:1fr !important;padding:28px 16px !important}
     .cdc-seat-main{padding:20px 16px 120px !important}
@@ -65,6 +66,13 @@
 
   /* ── Hero slider ── */
   #cdc-hero-slider::-webkit-scrollbar{ display:none; }
+  #cdc-hero-slider{ user-select:none; -webkit-user-select:none; }
+
+  /* ── Mobile header fixes ── */
+  @media(max-width:700px){
+    .cdc-header-settings{ display:none !important; }
+    .cdc-header-buy{ display:none !important; }
+  }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -87,9 +95,9 @@
         </a>
 
         <div style="position:absolute;right:0;display:flex;align-items:center;gap:12px">
-          <button onClick="{{ goPayouts }}" aria-label="Panel del cine" style="{{ iconBtnStyle }};background:transparent;cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
-          <button aria-label="Buscar" style="{{ iconBtnStyle }};background:transparent;cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
-          <button onClick="{{ buyFeatured }}" style="display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:10px 18px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
+          <button class="cdc-header-settings" onClick="{{ goPayouts }}" aria-label="Panel del cine" style="{{ iconBtnStyle }};background:transparent;cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
+          <button onClick="{{ openSearch }}" aria-label="Buscar" style="{{ iconBtnStyle }};background:transparent;cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+          <button onClick="{{ buyFeatured }}" class="cdc-header-buy" style="display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:10px 18px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
         </div>
       </div>
 
@@ -109,7 +117,7 @@
     <div style="position:relative">
       <div id="cdc-hero-slider" style="display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x">
         <sc-for list="{{ heroMoviesVm }}" as="h" hint-placeholder-count="7">
-          <div style="flex:none;width:100%;scroll-snap-align:start;position:relative;overflow:hidden;isolation:isolate">
+          <div style="flex:none;width:100%;scroll-snap-align:start;position:relative;overflow:hidden;isolation:isolate;touch-action:pan-x">
             <image-slot id="{{ h.bgSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="Imagen de fondo" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none"></image-slot>
             <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
             <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
@@ -649,6 +657,36 @@
   </div>
   </sc-if>
 
+  <!-- ================= SEARCH MODAL ================= -->
+  <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:95">
+    <div onClick="{{ closeSearch }}" style="position:absolute;inset:0;background:oklch(0 0 0 / .8);backdrop-filter:blur(8px)"></div>
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;padding:72px 16px 32px;pointer-events:none">
+      <div style="width:100%;max-width:600px;pointer-events:auto">
+        <div style="display:flex;align-items:center;gap:12px;border-radius:14px;border:1px solid var(--border);background:var(--card);padding:14px 20px;box-shadow:0 20px 60px -10px oklch(0 0 0 / .6)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0;color:var(--gray)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input value="{{ searchQuery }}" onInput="{{ onSearchQuery }}" placeholder="Buscar película o género…" autofocus style="background:transparent;border:none;outline:none;font-family:inherit;font-size:16px;color:#fff;width:100%;min-width:0">
+          <button onClick="{{ closeSearch }}" style="background:transparent;border:none;cursor:pointer;color:var(--gray);font-size:20px;padding:0;line-height:1;flex-shrink:0">✕</button>
+        </div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ searchResultsVm }}" as="sr" hint-placeholder-count="0">
+            <button onClick="{{ sr.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);background:var(--card);border-radius:12px;padding:14px 16px;cursor:pointer;width:100%;text-align:left;font-family:inherit">
+              <div>
+                <div style="font-size:15px;font-weight:700;color:#fff">{{ sr.title }}</div>
+                <div style="margin-top:3px;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ sr.genre }}</div>
+              </div>
+              <span style="flex-shrink:0;border-radius:30px;padding:4px 10px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;{{ sr.badgeStyle }}">{{ sr.badge }}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ searchEmpty }}">
+            <div style="text-align:center;padding:32px;color:var(--gray);font-size:14px">Sin resultados para "{{ searchQuery }}"</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
   <!-- ================= TRAILER MODAL ================= -->
   <sc-if value="{{ trailerOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closeTrailer }}" style="position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:32px;background:oklch(0 0 0 / .82);backdrop-filter:blur(6px)">
@@ -697,6 +735,9 @@ class Component extends DCLogic {
     copied: false,
     ownerAuth: false,
     heroSlide: 0,
+    searchOpen: false,
+    searchQuery: '',
+    activeNav: 'Home',
     pin: '',
     pinError: false,
     deposits: [
@@ -744,7 +785,10 @@ class Component extends DCLogic {
     return list[this.state.movieIndex] || this.movieData()[0];
   }
 
-  goHome = () => { this.setState({ screen:'home' }); window.scrollTo(0,0); };
+  goHome = () => { this.setState({ screen:'home', activeNav:'Home' }); window.scrollTo(0,0); };
+  openSearch = () => this.setState({ searchOpen:true, searchQuery:'' });
+  closeSearch = () => this.setState({ searchOpen:false });
+  onSearchQuery = (e) => this.setState({ searchQuery: e.target.value });
   openSeats = (idx, time) => { this.setState({ screen:'seats', source:'movies', movieIndex:idx, showtime:time, seats:[] }); window.scrollTo(0,0); };
   openPreorder = (idx) => { this.setState({ screen:'seats', source:'upcoming', movieIndex:idx, showtime:this.upcomingData()[idx].premiereTime || '20:00', seats:[] }); window.scrollTo(0,0); };
   buyFeatured = () => this.openSeats(0, this.movieData()[0].schedule[0]);
@@ -889,12 +933,13 @@ class Component extends DCLogic {
     const iconBtnStyle = 'display:grid;place-items:center;height:36px;width:36px;border-radius:50%;border:1px solid var(--border);color:color-mix(in oklab,#fff 80%,transparent);text-decoration:none';
     const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%';
 
+    const activeNav = this.state.activeNav;
     const navLabels = ['Home','Cartelera','Próximamente','Promociones','Contacto'];
-    const navItems = navLabels.map((label, i) => ({
+    const navItems = navLabels.map((label) => ({
       label,
       href: label === 'Cartelera' ? '#cartelera' : (label === 'Próximamente' ? '#proximamente' : '#'),
-      onClick: label === 'Home' ? this.goHome : null,
-      style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${i===0 ? 'var(--primary)' : 'color-mix(in oklab,#fff 85%,transparent)'}`,
+      onClick: label === 'Home' ? this.goHome : () => this.setState({ activeNav: label }),
+      style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${label === activeNav ? 'var(--primary)' : 'color-mix(in oklab,#fff 85%,transparent)'}`,
     }));
 
     const calYear = this.state.calYear;
@@ -940,6 +985,27 @@ class Component extends DCLogic {
       posterHint: 'Póster ' + u.title,
       onPreorder: () => this.openPreorder(idx),
     }));
+
+    const sq = (this.state.searchQuery || '').toLowerCase().trim();
+    const allMoviesSearch = [
+      ...movies.map(m => ({ title:m.title, genre:m.genre, isNow:true, idx:movies.indexOf(m), schedule:m.schedule })),
+      ...upcoming.map(u => ({ title:u.title, genre:u.genre, isNow:false, idx:upcoming.indexOf(u), schedule:null })),
+    ];
+    const searchResultsRaw = sq.length > 1
+      ? allMoviesSearch.filter(m => m.title.toLowerCase().includes(sq) || m.genre.toLowerCase().includes(sq))
+      : [];
+    const searchResultsVm = searchResultsRaw.map(m => ({
+      title: m.title,
+      genre: m.genre,
+      badge: m.isNow ? 'En cartelera' : 'Próximamente',
+      badgeStyle: m.isNow
+        ? 'background:var(--primary);color:#fff'
+        : 'background:oklch(0.28 0.07 260);color:color-mix(in oklab,#fff 80%,transparent)',
+      onClick: m.isNow
+        ? () => { this.setState({ searchOpen:false }); this.openSeats(m.idx, m.schedule[0]); }
+        : () => { this.setState({ searchOpen:false }); this.openPreorder(m.idx); },
+    }));
+    const searchEmpty = sq.length > 1 && searchResultsRaw.length === 0;
 
     const heroDots = movies.map((_, i) => ({
       style: `width:${i === this.state.heroSlide ? '24px' : '8px'};height:8px;border-radius:4px;background:${i === this.state.heroSlide ? 'var(--primary)' : 'oklch(1 0 0 / 25%)'};transition:all .35s ease`,
@@ -1103,6 +1169,10 @@ class Component extends DCLogic {
 
       pinDots, keypadVm, pinError:this.state.pinError, accessHint:'Código demo: 2470',
       pressPin:this.pressPin, backPin:this.backPin,
+
+      searchOpen: this.state.searchOpen, searchQuery: this.state.searchQuery,
+      searchResultsVm, searchEmpty,
+      openSearch:this.openSearch, closeSearch:this.closeSearch, onSearchQuery:this.onSearchQuery,
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
