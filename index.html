@@ -60,10 +60,8 @@
     .cdc-nav{gap:4px 12px !important}
   }
 
-  /* ── Upcoming slider ── */
-  @media(max-width:600px){
-    .cdc-slide-card{min-width:calc(100vw - 56px) !important;width:calc(100vw - 56px) !important}
-  }
+  /* ── Week releases carousel ── */
+  #cdc-week-carousel::-webkit-scrollbar{ display:none; }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -218,50 +216,40 @@
         </div>
       </section>
 
-      <!-- PRÓXIMOS ESTRENOS -->
+      <!-- ESTRENOS DE LA SEMANA (carousel) -->
       <section id="proximamente" style="padding-top:112px">
         <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
           <div style="position:relative">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Reserva antes que nadie</div>
-            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
+            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Esta semana en cartelera</div>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Estrenos de la semana</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:16px">
-            <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid color-mix(in oklab, var(--primary) 40%, transparent);background:color-mix(in oklab, var(--primary) 10%, transparent);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
-            <div style="display:flex;gap:8px">
-              <button onClick="{{ prevSlide }}" style="{{ prevSlideStyle }}">‹</button>
-              <button onClick="{{ nextSlide }}" style="{{ nextSlideStyle }}">›</button>
-            </div>
-          </div>
-        </div>
-
-        <div style="overflow:hidden;touch-action:pan-y" onMouseEnter="{{ pauseSlider }}" onMouseLeave="{{ resumeSlider }}" onTouchStart="{{ handleTouchStart }}" onTouchEnd="{{ handleTouchEnd }}">
-          <div style="display:flex;gap:24px;transition:transform .45s cubic-bezier(.25,.46,.45,.94);transform:{{ slideTransform }}">
-            <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
-              <article class="cdc-slide-card" style="min-width:280px;width:280px;flex:none;position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
-                <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
-                  <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-                  <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
-                  <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
-                  <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
-                    <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
-                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
-                  </div>
-                </div>
-                <div style="display:flex;flex:1;flex-direction:column;padding:20px">
-                  <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
-                  <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
-                  <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
-                  <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
-                </div>
-              </article>
+          <div style="display:flex;align-items:center;gap:8px;padding-bottom:6px">
+            <sc-for list="{{ weekDots }}" as="dot" hint-placeholder-count="4">
+              <div style="{{ dot.style }}"></div>
             </sc-for>
           </div>
         </div>
 
-        <div style="display:flex;justify-content:center;gap:10px;margin-top:28px">
-          <sc-for list="{{ upcomingDots }}" as="dot" hint-placeholder-count="4">
-            <button onClick="{{ dot.onClick }}" style="{{ dot.style }}"></button>
+        <div id="cdc-week-carousel" style="display:flex;gap:20px;overflow-x:scroll;overflow-y:visible;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:12px;-webkit-overflow-scrolling:touch">
+          <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
+            <article style="flex:none;width:clamp(260px,75vw,300px);scroll-snap-align:start;position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:var(--card);outline:1px solid var(--border)">
+              <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
+                <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
+                <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Estreno</div>
+                <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
+                  <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
+                  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:color-mix(in oklab,#fff 75%,transparent);margin-top:2px">{{ u.dateSub }}</div>
+                </div>
+              </div>
+              <div style="display:flex;flex:1;flex-direction:column;padding:20px">
+                <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
+                <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
+                <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:color-mix(in oklab,#fff 70%,transparent);flex:1">{{ u.synopsis }}</p>
+                <button onClick="{{ u.onPreorder }}" style="margin-top:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:11px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar</button>
+              </div>
+            </article>
           </sc-for>
         </div>
       </section>
@@ -699,7 +687,7 @@ class Component extends DCLogic {
     payMethod: 'card',
     copied: false,
     ownerAuth: false,
-    upcomingSlide: 0,
+    weekSlide: 0,
     pin: '',
     pinError: false,
     deposits: [
@@ -849,6 +837,42 @@ class Component extends DCLogic {
   openTrailer = () => this.setState({ trailerOpen:true });
   closeTrailer = () => this.setState({ trailerOpen:false });
 
+  componentDidMount() {
+    this._carouselTimer = setInterval(() => this._carouselTick(), 3500);
+  }
+  componentDidUpdate() {
+    const el = document.getElementById('cdc-week-carousel');
+    if (el && !el._cdcListened) {
+      el._cdcListened = true;
+      el.addEventListener('touchstart', () => {
+        this._userPaused = true;
+        clearTimeout(this._pauseResume);
+        this._pauseResume = setTimeout(() => { this._userPaused = false; }, 5000);
+      }, { passive:true });
+      el.addEventListener('scroll', () => {
+        const a = el.querySelector('article');
+        if (!a) return;
+        const slide = Math.round(el.scrollLeft / (a.offsetWidth + 20));
+        if (slide !== this.state.weekSlide) this.setState({ weekSlide: slide });
+      }, { passive:true });
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this._carouselTimer);
+    clearTimeout(this._pauseResume);
+  }
+  _carouselTick() {
+    if (this._userPaused) return;
+    const el = document.getElementById('cdc-week-carousel');
+    if (!el) return;
+    const a = el.querySelector('article');
+    if (!a) return;
+    const count = el.querySelectorAll('article').length;
+    const next = this.state.weekSlide >= count - 1 ? 0 : this.state.weekSlide + 1;
+    el.scrollTo({ left: next * (a.offsetWidth + 20), behavior:'smooth' });
+    this.setState({ weekSlide: next });
+  }
+
   renderVals() {
     const screen = this.state.screen;
     const movies = this.movieData();
@@ -937,6 +961,10 @@ class Component extends DCLogic {
       slotId: 'cdc-upcoming-' + idx,
       posterHint: 'Póster ' + u.title,
       onPreorder: () => this.openPreorder(idx),
+    }));
+
+    const weekDots = upcoming.map((_, i) => ({
+      style: `width:${i === this.state.weekSlide ? '24px' : '8px'};height:8px;border-radius:4px;background:${i === this.state.weekSlide ? 'var(--primary)' : 'oklch(1 0 0 / 25%)'};transition:all .35s ease`,
     }));
 
     // seats
@@ -1036,7 +1064,7 @@ class Component extends DCLogic {
       payProcessing: this.state.payProcessing,
 
       featured: this.featured(),
-      navItems, movies: moviesVm, upcoming: upcomingVm,
+      navItems, movies: moviesVm, upcoming: upcomingVm, weekDots,
       calOpen: this.state.calOpen, calBtnLabel: dateLabel,
       calMonthLabel, calDayLabels, calCells, calArrowStyle,
       prevMonth: this.prevMonth, nextMonth: this.nextMonth, toggleCal: this.toggleCal,
