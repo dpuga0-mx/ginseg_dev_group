@@ -43,8 +43,11 @@
     .cdc-header-social{display:none !important}
     .cdc-nav{gap:6px 16px !important;padding-top:10px !important;margin-top:10px !important}
     .cdc-main{padding:0 16px !important}
-    .cdc-hero-grid{padding:40px 16px 60px !important}
-    .cdc-hero-h1{font-size:54px !important}
+    .cdc-hero-grid{padding:36px 16px 72px !important}
+    .cdc-hero-h1{font-size:52px !important}
+    .cdc-hero-synopsis{display:none !important}
+    .cdc-hero-btns{flex-direction:column !important}
+    .cdc-hero-btns button{width:100% !important}
     .cdc-exp-grid{grid-template-columns:1fr !important}
     .cdc-footer-grid{grid-template-columns:1fr !important;padding:28px 16px !important}
     .cdc-seat-main{padding:20px 16px 120px !important}
@@ -56,7 +59,7 @@
 
   /* ── Small phones (≤ 390 px) ── */
   @media(max-width:390px){
-    .cdc-hero-h1{font-size:42px !important}
+    .cdc-hero-h1{font-size:40px !important}
     .cdc-nav{gap:4px 12px !important}
   }
 
@@ -104,10 +107,10 @@
 
     <!-- HERO CAROUSEL -->
     <div style="position:relative">
-      <div id="cdc-hero-slider" style="display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;scrollbar-width:none">
+      <div id="cdc-hero-slider" style="display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x">
         <sc-for list="{{ heroMoviesVm }}" as="h" hint-placeholder-count="7">
           <div style="flex:none;width:100%;scroll-snap-align:start;position:relative;overflow:hidden;isolation:isolate">
-            <image-slot id="{{ h.bgSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="Imagen de fondo" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5"></image-slot>
+            <image-slot id="{{ h.bgSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="Imagen de fondo" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none"></image-slot>
             <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
             <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
 
@@ -126,16 +129,16 @@
                   <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
                   <span style="border:1px solid color-mix(in oklab, #fff 30%, transparent);border-radius:4px;padding:1px 7px;font-size:10px">{{ h.rating }}</span>
                 </div>
-                <p style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:color-mix(in oklab, #fff 80%, transparent)">{{ h.synopsis }}</p>
-                <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
-                  <button onClick="{{ h.onBuy }}" style="display:inline-flex;align-items:center;gap:12px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
-                  <button onClick="{{ openTrailer }}" style="display:inline-flex;align-items:center;gap:12px;cursor:pointer;border-radius:30px;border:1px solid color-mix(in oklab, #fff 30%, transparent);background:color-mix(in oklab, #fff 5%, transparent);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
+                <p class="cdc-hero-synopsis" style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:color-mix(in oklab, #fff 80%, transparent)">{{ h.synopsis }}</p>
+                <div class="cdc-hero-btns" style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
+                  <button onClick="{{ h.onBuy }}" style="display:inline-flex;align-items:center;justify-content:center;gap:12px;border:none;cursor:pointer;border-radius:30px;background:var(--gradRed);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
+                  <button onClick="{{ openTrailer }}" style="display:inline-flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;border-radius:30px;border:1px solid color-mix(in oklab, #fff 30%, transparent);background:color-mix(in oklab, #fff 5%, transparent);padding:15px 30px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
                 </div>
               </div>
 
               <div class="cdc-hero-poster" style="position:relative">
                 <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster);outline:1px solid var(--border)">
-                  <image-slot id="{{ h.posterSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="{{ h.title }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
+                  <image-slot id="{{ h.posterSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="{{ h.title }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></image-slot>
                   <div style="position:absolute;inset:0;background:var(--gradPoster);z-index:1;pointer-events:none"></div>
                   <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
                     <div>
