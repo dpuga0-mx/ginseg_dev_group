@@ -704,18 +704,6 @@ class Component extends DCLogic {
     ],
   };
 
-  featured() {
-    return {
-      title: 'TOY STORY 5',
-      tagline: 'La aventura continúa',
-      synopsis: 'Woody, Buzz y toda la pandilla regresan en una nueva aventura llena de emoción, amistad y diversión para toda la familia.',
-      genre: 'Animación · Familiar',
-      duration: '1h 42min',
-      rating: 'AA',
-      score: '9.0',
-    };
-  }
-
   movieData() {
     return [
       { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'], synopsis:'Woody, Buzz y los amigos de Andy se enfrentan a nuevos cambios y aventuras que pondrán a prueba su amistad.' },
@@ -996,19 +984,6 @@ class Component extends DCLogic {
       qrCells.push({ style:`border-radius:1px;background:${on ? '#0a0a0a' : 'transparent'}` });
     }
 
-    // ── upcoming slider ──
-    if (!this._sliderStarted) { this._sliderStarted = true; this._startSlider(); }
-    const upcomingSlide = this.state.upcomingSlide;
-    const slideStep = 280 + 24;
-    const slideTransform = upcomingSlide > 0 ? `translateX(-${upcomingSlide * slideStep}px)` : 'none';
-    const arrowBase = 'width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:#fff;cursor:pointer;font-size:24px;padding:0;line-height:1;font-family:inherit;display:grid;place-items:center';
-    const prevSlideStyle = arrowBase;
-    const nextSlideStyle = arrowBase;
-    const upcomingDots = upcoming.map((_, i) => ({
-      onClick: () => { this._stopSlider(); this.setState({ upcomingSlide: i }); this._startSlider(); },
-      style: `height:8px;border-radius:4px;border:none;padding:0;cursor:pointer;transition:all .3s;${i === upcomingSlide ? 'width:24px;background:var(--primary)' : 'width:8px;background:oklch(1 0 0 / 20%)'}`,
-    }));
-
     // ── payouts / bank ──
     const banks = [
       { id:'bbva', name:'BBVA' }, { id:'banorte', name:'Banorte' },
@@ -1057,7 +1032,7 @@ class Component extends DCLogic {
       trailerOpen: this.state.trailerOpen,
       payProcessing: this.state.payProcessing,
 
-      featured: this.featured(),
+      featured: movies[this.state.heroSlide] || movies[0],
       navItems, movies: moviesVm, upcoming: upcomingVm, heroDots, heroMoviesVm,
       calOpen: this.state.calOpen, calBtnLabel: dateLabel,
       calMonthLabel, calDayLabels, calCells, calArrowStyle,
@@ -1125,11 +1100,6 @@ class Component extends DCLogic {
 
       pinDots, keypadVm, pinError:this.state.pinError, accessHint:'Código demo: 2470',
       pressPin:this.pressPin, backPin:this.backPin,
-
-      slideTransform, prevSlideStyle, nextSlideStyle, upcomingDots,
-      prevSlide: this.prevSlide, nextSlide: this.nextSlide,
-      pauseSlider: this.pauseSlider, resumeSlider: this.resumeSlider,
-      handleTouchStart: this.handleTouchStart, handleTouchEnd: this.handleTouchEnd,
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
