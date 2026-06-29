@@ -294,7 +294,7 @@
       </section>
 
       <!-- PROMO -->
-      <section style="padding-top:112px;padding-bottom:112px">
+      <section id="promociones" style="padding-top:112px;padding-bottom:112px">
         <div style="position:relative;overflow:hidden;border-radius:24px;border:1px solid color-mix(in oklab,var(--primary) 30%,transparent);background:var(--blue);padding:56px">
           <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 80% 50%, var(--primary) 0%, transparent 55%)"></div>
           <div class="cdc-promo-grid" style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
@@ -313,7 +313,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer style="border-top:1px solid var(--border);background:oklch(0.07 0 0)">
+    <footer id="contacto" style="border-top:1px solid var(--border);background:oklch(0.07 0 0)">
       <div class="cdc-footer-grid" style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
         <div>
           <div style="display:flex;align-items:center;gap:12px">
@@ -937,7 +937,7 @@ class Component extends DCLogic {
     const navLabels = ['Home','Cartelera','Próximamente','Promociones','Contacto'];
     const navItems = navLabels.map((label) => ({
       label,
-      href: label === 'Cartelera' ? '#cartelera' : (label === 'Próximamente' ? '#proximamente' : '#'),
+      href: label === 'Cartelera' ? '#cartelera' : label === 'Próximamente' ? '#proximamente' : label === 'Promociones' ? '#promociones' : label === 'Contacto' ? '#contacto' : 'javascript:void(0)',
       onClick: label === 'Home' ? this.goHome : () => this.setState({ activeNav: label }),
       style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${label === activeNav ? 'var(--primary)' : 'color-mix(in oklab,#fff 85%,transparent)'}`,
     }));
