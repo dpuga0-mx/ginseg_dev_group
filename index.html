@@ -13,362 +13,318 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="image-slot.js"></script>
 <style>
-  /* ── Reset & base ─────────────────────────────────── */
   *{ box-sizing:border-box; }
   body{ margin:0; background:oklch(0.07 0 0); }
   button{ font-family:inherit; }
   input::placeholder{ color:oklch(0.78 0 0 / .5); }
   ::selection{ background:oklch(0.60 0.235 25); color:#fff; }
+  @keyframes cdcpulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
+  @keyframes cdcspin{ to{ transform:rotate(360deg) } }
+  .cdc-spin{ animation:cdcspin .8s linear infinite; }
+  .cdc-disp{ font-family:'Bebas Neue',sans-serif; letter-spacing:.02em; }
   image-slot{ display:block; }
 
-  /* ── Display font ─────────────────────────────────── */
-  .cdc-disp{ font-family:'Bebas Neue',sans-serif; letter-spacing:.02em; }
+  /* ── Scroll suave ── */
+  html{ scroll-behavior:smooth; }
 
-  /* ── Keyframes ────────────────────────────────────── */
-  @keyframes cdcpulse{ 0%,100%{opacity:1} 50%{opacity:.3} }
+  /* ── Scrollbar personalizado ── */
+  ::-webkit-scrollbar{ width:5px; }
+  ::-webkit-scrollbar-track{ background:oklch(0.09 0 0); }
+  ::-webkit-scrollbar-thumb{ background:oklch(0.60 0.235 25 / .5); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover{ background:oklch(0.60 0.235 25); }
 
-  /* Hero fade-in para el contenido */
+  /* ── Hero fade-in animaciones ── */
   @keyframes heroFadeUp{
-    from{ opacity:0; transform:translateY(28px); }
-    to  { opacity:1; transform:translateY(0); }
+    from{ opacity:0; transform:translateY(24px); }
+    to{ opacity:1; transform:translateY(0); }
   }
-  @keyframes heroFadeIn{
-    from{ opacity:0; }
-    to  { opacity:1; }
-  }
-  /* Partículas / estrellas en el hero */
+  @keyframes heroFadeIn{ from{opacity:0} to{opacity:1} }
+
+  .hero-badge   { animation:heroFadeIn  .5s ease both; animation-delay:.05s; }
+  .hero-title   { animation:heroFadeUp  .6s ease both; animation-delay:.15s; }
+  .hero-meta    { animation:heroFadeUp  .6s ease both; animation-delay:.25s; }
+  .hero-synopsis{ animation:heroFadeUp  .6s ease both; animation-delay:.35s; }
+  .hero-btns    { animation:heroFadeUp  .6s ease both; animation-delay:.45s; }
+  .hero-poster  { animation:heroFadeIn  .8s ease both; animation-delay:.2s;  }
+
+  /* ── Partículas en el hero ── */
   @keyframes starFloat{
-    0%  { transform:translateY(0)   scale(1);   opacity:.7; }
-    50% { transform:translateY(-18px) scale(1.2); opacity:1; }
-    100%{ transform:translateY(0)   scale(1);   opacity:.7; }
+    0%,100%{ transform:translateY(0) scale(1);   opacity:.5; }
+    50%     { transform:translateY(-14px) scale(1.3); opacity:.9; }
   }
-  /* Borde giratorio en tarjetas de experiencia */
-  @keyframes borderSpin{
-    to{ --border-angle:360deg; }
-  }
-  /* Brillo en hover de tarjetas de película */
-  @keyframes cardShine{
-    0%  { left:-80%; }
-    100%{ left:130%; }
-  }
-  /* Entrada suave de la página */
-  @keyframes pageIn{
-    from{ opacity:0; }
-    to  { opacity:1; }
-  }
-  /* Bounce suave botón CTA */
-  @keyframes ctaBounce{
-    0%,100%{ transform:translateY(0); }
-    50%    { transform:translateY(-3px); }
-  }
-
-  /* ── Animaciones de entrada del hero ─────────────── */
-  .hero-badge  { animation: heroFadeIn  .6s ease both; animation-delay:.1s; }
-  .hero-title  { animation: heroFadeUp  .7s ease both; animation-delay:.25s; }
-  .hero-tagline{ animation: heroFadeUp  .7s ease both; animation-delay:.35s; }
-  .hero-meta   { animation: heroFadeUp  .7s ease both; animation-delay:.45s; }
-  .hero-synopsis{ animation:heroFadeUp  .7s ease both; animation-delay:.55s; }
-  .hero-actions{ animation: heroFadeUp  .7s ease both; animation-delay:.65s; }
-  .hero-poster { animation: heroFadeIn  .9s ease both; animation-delay:.3s; }
-
-  /* ── Header glassmorphism mejorado ───────────────── */
-  .cdc-header{
-    position:sticky; top:0; z-index:50;
-    border-bottom:1px solid oklch(1 0 0 / 10%);
-    background:oklch(0.07 0 0 / .75);
-    backdrop-filter:blur(24px) saturate(180%);
-    -webkit-backdrop-filter:blur(24px) saturate(180%);
-    box-shadow:0 1px 0 0 oklch(1 0 0 / 6%), 0 4px 32px oklch(0 0 0 / .4);
-    transition:background .3s;
-  }
-
-  /* ── Tarjetas de película ─────────────────────────── */
-  .movie-card{
-    position:relative;
-    display:flex; flex-direction:column;
-    overflow:hidden;
-    border-radius:18px;
-    background:var(--card);
-    outline:1px solid var(--border);
-    transition:transform .3s cubic-bezier(.34,1.56,.64,1),
-                box-shadow .3s ease,
-                outline-color .3s ease;
-    will-change:transform;
-  }
-  .movie-card:hover{
-    transform:translateY(-6px) scale(1.025);
-    outline-color:oklch(0.60 0.235 25 / 60%);
-    box-shadow:0 20px 60px oklch(0 0 0 / .55),
-               0 0 0 1px oklch(0.60 0.235 25 / 30%);
-  }
-  /* Brillo al hacer hover */
-  .movie-card::before{
-    content:'';
-    position:absolute;
-    top:0; left:-80%;
-    width:50%; height:100%;
-    background:linear-gradient(90deg,transparent,oklch(1 0 0 / .08),transparent);
-    transform:skewX(-15deg);
-    pointer-events:none;
-    z-index:10;
-    opacity:0;
-    transition:opacity .1s;
-  }
-  .movie-card:hover::before{
-    opacity:1;
-    animation:cardShine .5s ease forwards;
-  }
-  /* Sinopsis en hover */
-  .movie-card .hover-synopsis{
-    position:absolute;
-    inset:0;
-    background:oklch(0.07 0 0 / .88);
-    backdrop-filter:blur(6px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:28px;
-    text-align:center;
-    font-size:13px;
-    line-height:1.6;
-    color:oklch(0.9 0 0);
-    z-index:5;
-    opacity:0;
-    transition:opacity .25s ease;
-    pointer-events:none;
-    border-radius:18px 18px 0 0;
-  }
-  .movie-card:hover .hover-synopsis{ opacity:1; }
-
-  /* ── Tarjetas de experiencia con borde animado ───── */
-  @property --border-angle{
-    syntax:'<angle>';
-    inherits:false;
-    initial-value:0deg;
-  }
-  .exp-card{
-    position:relative;
-    overflow:hidden;
-    border-radius:18px;
-    background:var(--card);
-    padding:32px;
-    transition:transform .3s ease, box-shadow .3s ease;
-    /* borde con gradiente cónico */
-    border:1px solid transparent;
-    background-clip:padding-box;
-  }
-  .exp-card::before{
-    content:'';
-    position:absolute;
-    inset:-1px;
-    border-radius:19px;
-    background:conic-gradient(
-      from var(--border-angle),
-      oklch(0.60 0.235 25 / 0%) 0%,
-      oklch(0.60 0.235 25) 10%,
-      oklch(0.60 0.235 25 / 0%) 20%
-    );
-    z-index:-1;
-    opacity:0;
-    transition:opacity .3s;
-    animation:borderSpin 3s linear infinite paused;
-  }
-  .exp-card:hover::before{
-    opacity:1;
-    animation-play-state:running;
-  }
-  .exp-card::after{
-    content:'';
-    position:absolute;
-    inset:1px;
-    border-radius:17px;
-    background:var(--card);
-    z-index:-1;
-  }
-  .exp-card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 16px 48px oklch(0 0 0 / .5);
-  }
-
-  /* ── Botones CTA – animación bounce continua ──────── */
-  .cta-primary{
-    display:inline-flex; align-items:center; gap:12px;
-    border:none; cursor:pointer;
-    border-radius:30px;
-    background:var(--gradRed);
-    padding:15px 30px;
-    font-size:14px; font-weight:800;
-    text-transform:uppercase; letter-spacing:2px;
-    color:#fff;
-    box-shadow:var(--shadowRed);
-    transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
-  }
-  .cta-primary:hover{
-    transform:translateY(-2px) scale(1.04);
-    box-shadow:0 16px 48px oklch(0.60 0.235 25 / .6);
-    filter:brightness(1.1);
-    animation:none;
-  }
-  .cta-primary:active{
-    transform:scale(.97);
-  }
-
-  .cta-secondary{
-    display:inline-flex; align-items:center; gap:12px;
-    cursor:pointer;
-    border-radius:30px;
-    border:1px solid oklch(1 0 0 / 30%);
-    background:oklch(1 0 0 / 5%);
-    padding:15px 30px;
-    font-size:14px; font-weight:800;
-    text-transform:uppercase; letter-spacing:2px;
-    color:#fff;
-    backdrop-filter:blur(4px);
-    transition:transform .2s ease, background .2s ease, border-color .2s ease;
-  }
-  .cta-secondary:hover{
-    transform:translateY(-2px);
-    background:oklch(1 0 0 / 10%);
-    border-color:oklch(1 0 0 / 60%);
-  }
-
-  /* ── Estrellas en el hero ─────────────────────────── */
-  .hero-stars{
-    position:absolute; inset:0; pointer-events:none; z-index:1; overflow:hidden;
-  }
-  .star{
-    position:absolute;
-    width:3px; height:3px;
-    border-radius:50%;
-    background:#fff;
-    opacity:.5;
-    animation:starFloat var(--dur,4s) ease-in-out infinite;
+  .cdc-star{
+    position:absolute; border-radius:50%; background:#fff; pointer-events:none;
+    animation:starFloat var(--dur,5s) ease-in-out infinite;
     animation-delay:var(--del,0s);
   }
 
-  /* ── Gradiente de póster más dramático ───────────── */
-  .poster-grad{
-    position:absolute; inset:0;
-    background:linear-gradient(
-      180deg,
-      transparent 30%,
-      oklch(0 0 0 / .6) 60%,
-      oklch(0 0 0 / .97) 100%
-    );
-    z-index:1; pointer-events:none;
-  }
-  /* Gradiente lateral izquierdo para darle profundidad */
-  .poster-grad-left{
-    position:absolute; inset:0;
-    background:linear-gradient(
-      90deg,
-      oklch(0 0 0 / .25) 0%,
-      transparent 50%
-    );
-    z-index:1; pointer-events:none;
+  /* ── Header glassmorphism mejorado ── */
+  .cdc-header{
+    position:sticky; top:0; z-index:50;
+    border-bottom:1px solid oklch(1 0 0 / 10%);
+    background:oklch(0.07 0 0 / .78);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    box-shadow:0 1px 0 oklch(1 0 0 / 5%), 0 4px 24px oklch(0 0 0 / .35);
   }
 
-  /* ── Badge "Nuevo" en tarjetas ───────────────────── */
-  .badge-new{
-    position:absolute; right:12px; bottom:62px; z-index:3;
-    border-radius:30px;
-    background:oklch(0.55 0.2 140); /* verde */
-    padding:3px 10px;
-    font-size:9px; font-weight:800;
-    text-transform:uppercase; letter-spacing:2px;
-    color:#fff;
-    box-shadow:0 4px 12px oklch(0.55 0.2 140 / .5);
-    animation:cdcpulse 2s ease-in-out infinite;
+  /* ── Nav links con subrayado animado ── */
+  .cdc-nav-link{
+    font-size:11px; font-weight:800;
+    text-transform:uppercase; letter-spacing:3px;
+    text-decoration:none; position:relative;
+    transition:color .2s;
   }
+  .cdc-nav-link::after{
+    content:''; position:absolute; left:0; bottom:-4px;
+    width:0; height:2px; background:var(--primary); border-radius:1px;
+    transition:width .25s ease;
+  }
+  .cdc-nav-link:hover::after{ width:100%; }
 
-  /* ── Upcoming cards ───────────────────────────────── */
-  .upcoming-card{
+  /* ── Tarjetas de película con hover ── */
+  .cdc-movie-card{
     position:relative; display:flex; flex-direction:column;
     overflow:hidden; border-radius:18px;
     background:var(--card); outline:1px solid var(--border);
-    transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, outline-color .3s;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .3s ease, outline-color .3s;
     will-change:transform;
   }
-  .upcoming-card:hover{
-    transform:translateY(-5px) scale(1.02);
-    outline-color:oklch(0.60 0.235 25 / 50%);
-    box-shadow:0 20px 60px oklch(0 0 0 / .5);
+  .cdc-movie-card:hover{
+    transform:translateY(-6px) scale(1.022);
+    outline-color:oklch(0.60 0.235 25 / 55%);
+    box-shadow:0 22px 56px oklch(0 0 0 / .55),
+               0 0 0 1px oklch(0.60 0.235 25 / 25%);
+  }
+  /* Brillo de barrido al hover */
+  .cdc-movie-card::before{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(105deg,
+      transparent 40%,
+      oklch(1 0 0 / .07) 50%,
+      transparent 60%);
+    transform:translateX(-100%);
+    transition:transform .4s ease;
+    pointer-events:none; z-index:6;
+  }
+  .cdc-movie-card:hover::before{ transform:translateX(100%); }
+
+  /* Sinopsis en hover sobre imagen ── */
+  .cdc-movie-synopsis-hover{
+    position:absolute; inset:0;
+    background:oklch(0.05 0 0 / .86);
+    backdrop-filter:blur(5px);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; text-align:center;
+    font-size:13px; line-height:1.6; color:oklch(0.92 0 0);
+    z-index:4; opacity:0;
+    transition:opacity .25s ease;
+    pointer-events:none;
+    border-radius:0; /* la imagen padre ya tiene overflow:hidden */
+  }
+  .cdc-movie-card:hover .cdc-movie-synopsis-hover{ opacity:1; }
+
+  /* ── Upcoming cards ── */
+  .cdc-upcoming-card{
+    position:relative; display:flex; flex-direction:column;
+    overflow:hidden; border-radius:18px;
+    background:var(--card); outline:1px solid var(--border);
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1),
+                box-shadow .3s ease, outline-color .3s;
+    will-change:transform;
+  }
+  .cdc-upcoming-card:hover{
+    transform:translateY(-5px) scale(1.018);
+    outline-color:oklch(0.60 0.235 25 / 45%);
+    box-shadow:0 18px 52px oklch(0 0 0 / .5);
   }
 
-  /* ── Sección de horarios: resalta al hover ────────── */
-  .schedule-btn{
+  /* ── Tarjetas de experiencia con borde giratorio ── */
+  @property --cdc-angle{
+    syntax:'<angle>'; inherits:false; initial-value:0deg;
+  }
+  @keyframes cdcBorderSpin{ to{ --cdc-angle:360deg; } }
+
+  .cdc-exp-card{
+    position:relative; overflow:hidden;
+    border-radius:18px; background:var(--card);
+    padding:32px;
     border:1px solid var(--border);
-    cursor:pointer; border-radius:8px;
-    background:oklch(0.07 0 0 / .4);
-    padding:8px;
-    font-size:14px; font-weight:800; color:#fff;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .cdc-exp-card::before{
+    content:''; position:absolute; inset:-1px; border-radius:19px;
+    background:conic-gradient(
+      from var(--cdc-angle),
+      oklch(0.60 0.235 25 / 0%) 0%,
+      oklch(0.60 0.235 25)      10%,
+      oklch(0.60 0.235 25 / 0%) 20%
+    );
+    z-index:0; opacity:0; transition:opacity .3s;
+    animation:cdcBorderSpin 3s linear infinite paused;
+  }
+  .cdc-exp-card::after{
+    content:''; position:absolute; inset:1px;
+    border-radius:17px; background:var(--card); z-index:0;
+  }
+  .cdc-exp-card > *{ position:relative; z-index:1; }
+  .cdc-exp-card:hover::before{
+    opacity:1; animation-play-state:running;
+  }
+  .cdc-exp-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 44px oklch(0 0 0 / .5);
+  }
+
+  /* ── Botones CTA ── */
+  .cdc-btn-primary{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    border:none; cursor:pointer; border-radius:30px;
+    background:var(--gradRed); color:#fff;
+    font-weight:800; text-transform:uppercase; letter-spacing:2px;
+    font-family:inherit;
+    box-shadow:var(--shadowRed);
+    transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  }
+  .cdc-btn-primary:hover{
+    transform:translateY(-2px) scale(1.03);
+    box-shadow:0 14px 42px oklch(0.60 0.235 25 / .55);
+    filter:brightness(1.08);
+  }
+  .cdc-btn-primary:active{ transform:scale(.97); }
+
+  .cdc-btn-secondary{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    cursor:pointer; border-radius:30px;
+    border:1px solid oklch(1 0 0 / 30%);
+    background:oklch(1 0 0 / 5%);
+    color:#fff; font-weight:800;
+    text-transform:uppercase; letter-spacing:2px;
+    font-family:inherit; backdrop-filter:blur(4px);
+    transition:transform .2s, background .2s, border-color .2s;
+  }
+  .cdc-btn-secondary:hover{
+    transform:translateY(-2px);
+    background:oklch(1 0 0 / 10%);
+    border-color:oklch(1 0 0 / 55%);
+  }
+
+  /* ── Horarios: resalte en hover ── */
+  .cdc-sched-btn{
+    border:1px solid var(--border); cursor:pointer; border-radius:8px;
+    background:oklch(0.07 0 0 / .4); padding:8px;
+    font-size:14px; font-weight:800; color:#fff; font-family:inherit;
     transition:background .2s, border-color .2s, transform .15s;
   }
-  .schedule-btn:hover{
+  .cdc-sched-btn:hover{
     background:var(--gradRed);
     border-color:oklch(0.60 0.235 25);
-    transform:scale(1.05);
+    transform:scale(1.06);
   }
 
-  /* ── Footer link hover ───────────────────────────── */
-  .footer-link{
+  /* ── Footer links ── */
+  .cdc-footer-link{
     font-size:14px; color:var(--gray); text-decoration:none;
-    transition:color .2s;
-    position:relative;
+    position:relative; transition:color .2s; width:fit-content;
   }
-  .footer-link::after{
-    content:'';
-    position:absolute; left:0; bottom:-2px;
-    width:0; height:1px;
-    background:var(--primary);
+  .cdc-footer-link::after{
+    content:''; position:absolute; left:0; bottom:-2px;
+    width:0; height:1px; background:var(--primary);
     transition:width .25s ease;
   }
-  .footer-link:hover{ color:#fff; }
-  .footer-link:hover::after{ width:100%; }
+  .cdc-footer-link:hover{ color:#fff; }
+  .cdc-footer-link:hover::after{ width:100%; }
 
-  /* ── Nav link hover ───────────────────────────────── */
-  .nav-link{
-    font-size:11px; font-weight:800;
-    text-transform:uppercase; letter-spacing:3px;
-    text-decoration:none;
-    position:relative;
-    transition:color .2s;
+  /* ── Íconos sociales ── */
+  .cdc-icon-btn{
+    display:grid; place-items:center;
+    height:36px; width:36px; border-radius:50%;
+    border:1px solid var(--border);
+    color:oklch(1 0 0 / 80%); text-decoration:none;
+    transition:transform .2s, border-color .2s, background .2s;
   }
-  .nav-link::after{
-    content:'';
-    position:absolute; left:0; bottom:-4px;
-    width:0; height:2px;
-    background:var(--primary); border-radius:1px;
-    transition:width .25s ease;
-  }
-  .nav-link:hover::after{ width:100%; }
-
-  /* ── Mejoras mobile ───────────────────────────────── */
-  @media(max-width:768px){
-    .hero-grid{ grid-template-columns:1fr !important; }
-    .hero-poster-wrap{ display:none; }
-    .hero-title-text{ font-size:72px !important; }
-    .exp-grid{ grid-template-columns:1fr !important; }
-    .footer-grid{ grid-template-columns:1fr 1fr !important; }
-    .promo-grid{ grid-template-columns:1fr !important; }
-    .cta-primary,.cta-secondary{ padding:12px 22px !important; font-size:12px !important; }
-    .cdc-header-inner{ padding:14px 20px 6px !important; }
-    .section-title{ font-size:38px !important; }
-    .checkout-grid{ grid-template-columns:1fr !important; }
-  }
-  @media(max-width:480px){
-    .hero-title-text{ font-size:52px !important; }
-    .section-title{ font-size:30px !important; }
+  .cdc-icon-btn:hover{
+    transform:scale(1.1);
+    border-color:oklch(0.60 0.235 25 / 60%);
+    background:oklch(0.60 0.235 25 / 10%);
   }
 
-  /* ── Scroll suave global ──────────────────────────── */
-  html{ scroll-behavior:smooth; }
+  /* ── Tablet (≤ 900 px) ── */
+  @media(max-width:900px){
+    .cdc-hero-grid{grid-template-columns:1fr !important;padding:56px 24px 72px !important}
+    .cdc-hero-poster{display:none !important}
+    .cdc-hero-h1{font-size:80px !important}
+    .cdc-exp-grid{grid-template-columns:1fr 1fr !important}
+    .cdc-promo-grid{grid-template-columns:1fr !important}
+    .cdc-promo-btns{align-items:flex-start !important}
+    .cdc-footer-grid{grid-template-columns:1fr 1fr !important;padding:36px 24px !important;gap:28px !important}
+    .cdc-checkout-grid{grid-template-columns:1fr !important}
+    .cdc-checkout-main{padding:24px 24px 80px !important}
+  }
 
-  /* ── Scrollbar personalizado ─────────────────────── */
-  ::-webkit-scrollbar{ width:6px; }
-  ::-webkit-scrollbar-track{ background:oklch(0.1 0 0); }
-  ::-webkit-scrollbar-thumb{ background:oklch(0.60 0.235 25 / .6); border-radius:3px; }
-  ::-webkit-scrollbar-thumb:hover{ background:oklch(0.60 0.235 25); }
+  /* ── Mobile (≤ 600 px) ── */
+  @media(max-width:600px){
+    .cdc-header-inner{padding:12px 16px 8px !important}
+    .cdc-header-social{display:none !important}
+    .cdc-nav{gap:6px 16px !important;padding-top:10px !important;margin-top:10px !important}
+    .cdc-main{padding:0 16px !important}
+    .cdc-hero-grid{padding:36px 16px 72px !important}
+    .cdc-hero-h1{font-size:52px !important}
+    .cdc-hero-synopsis{display:none !important}
+    .cdc-hero-btns{flex-direction:column !important}
+    .cdc-hero-btns button{width:100% !important}
+    .cdc-header-buy{display:none !important}
+    .cdc-exp-grid{grid-template-columns:1fr !important}
+    .cdc-footer-grid{grid-template-columns:1fr !important;padding:28px 16px !important}
+    .cdc-seat-main{padding:20px 16px 120px !important}
+    .cdc-seat-scroll{overflow-x:auto !important;-webkit-overflow-scrolling:touch !important;padding-bottom:8px !important}
+    .cdc-seat-scroll>div{align-items:flex-start !important;min-width:max-content !important}
+    .cdc-checkout-main{padding:20px 16px 80px !important}
+    .cdc-seat-bar-inner{padding:12px 16px !important}
+  }
+
+  /* ── Small phones (≤ 390 px) ── */
+  @media(max-width:390px){
+    .cdc-hero-h1{font-size:40px !important}
+    .cdc-nav{gap:4px 12px !important}
+  }
+
+  /* ── Hero slider ── */
+  #cdc-hero-slider::-webkit-scrollbar{ display:none; }
+  #cdc-hero-slider{ user-select:none; -webkit-user-select:none; }
+
+  /* ── Mobile header fixes ── */
+  @media(max-width:700px){
+    .cdc-header-settings{ display:none !important; }
+    .cdc-header-buy{ display:none !important; }
+  }
+
+  /* ── image-slot ── */
+  image-slot{ touch-action:pan-y; pointer-events:none !important; }
+
+  /* ── Calendar dropdown ── */
+  .cdc-cal-dropdown{
+    position:absolute;right:0;top:calc(100% + 8px);z-index:20;
+    border-radius:16px;border:1px solid var(--border);
+    background:var(--card);padding:14px;
+    box-shadow:0 20px 40px -10px oklch(0 0 0 / 0.6);
+  }
+  @media(max-width:700px){
+    .cdc-cal-dropdown{ right:auto !important; left:0 !important; max-width:calc(100vw - 32px) !important; }
+  }
+
+  /* ── Gradient póster más dramático ── */
+  .cdc-grad-poster-deep{
+    position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(
+      180deg,
+      transparent 25%,
+      oklch(0 0 0 / .55) 60%,
+      oklch(0 0 0 / .97) 100%
+    );
+    z-index:1;
+  }
 </style>
 </helmet>
 <div style="{{ rootStyle }}">
@@ -377,12 +333,12 @@
   <header class="cdc-header">
     <div class="cdc-header-inner" style="max-width:1180px;margin:0 auto;padding:22px 32px 8px;display:flex;flex-direction:column;align-items:center">
       <div style="position:relative;display:flex;width:100%;align-items:center;justify-content:center">
-        <div style="position:absolute;left:0;display:flex;gap:12px">
-          <a href="#" aria-label="Facebook" style="{{ iconBtnStyle }};transition:transform .2s,background .2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
-          <a href="#" aria-label="Instagram" style="{{ iconBtnStyle }};transition:transform .2s,background .2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <div class="cdc-header-social" style="position:absolute;left:0;display:flex;gap:12px">
+          <a href="#" aria-label="Facebook" class="cdc-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="cdc-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         </div>
 
-        <a href="#" onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;transition:transform .2s" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
+        <a href="#" onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;transition:transform .2s" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'">
           <img src="cinemas-logo.png" alt="Cinemas del Country" style="width:62px;height:62px;object-fit:contain;filter:drop-shadow(var(--shadowRed))" />
           <div style="text-align:center;line-height:1">
             <div class="cdc-disp" style="font-size:26px;letter-spacing:1.5px;color:#fff">cine<span style="color:var(--primary)">mas</span></div>
@@ -391,14 +347,15 @@
         </a>
 
         <div style="position:absolute;right:0;display:flex;align-items:center;gap:12px">
-          <button aria-label="Buscar" style="{{ iconBtnStyle }};background:transparent;cursor:pointer;transition:transform .2s,background .2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
-          <button onClick="{{ buyFeatured }}" class="cta-primary" style="padding:10px 18px;font-size:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
+          <button class="cdc-header-settings cdc-icon-btn" onClick="{{ goPayouts }}" aria-label="Panel del cine" style="background:transparent;cursor:pointer;border:1px solid var(--border)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
+          <button onClick="{{ openSearch }}" aria-label="Buscar" class="cdc-icon-btn" style="background:transparent;cursor:pointer;border:1px solid var(--border)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+          <button onClick="{{ buyFeatured }}" class="cdc-btn-primary cdc-header-buy" style="padding:10px 18px;font-size:11px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
         </div>
       </div>
 
-      <nav style="margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 40px;border-top:1px solid var(--border);padding-top:16px;width:100%">
+      <nav class="cdc-nav" style="margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 40px;border-top:1px solid var(--border);padding-top:16px;width:100%">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="5">
-          <a href="{{ n.href }}" onClick="{{ n.onClick }}" class="nav-link" style="{{ n.style }}">{{ n.label }}</a>
+          <a href="{{ n.href }}" onClick="{{ n.onClick }}" class="cdc-nav-link" style="{{ n.style }}">{{ n.label }}</a>
         </sc-for>
       </nav>
     </div>
@@ -408,94 +365,120 @@
   <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
   <div>
 
-    <!-- HERO -->
-    <section style="position:relative;overflow:hidden;isolation:isolate">
-      <!-- Fondo -->
-      <image-slot id="cdc-hero-bg" fit="cover" src="posters/toystory.png" placeholder="Imagen de sala (hero)" style="position:absolute;inset:0;width:100%;height:100%;opacity:.45"></image-slot>
-      <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
-      <div style="position:absolute;inset:0;z-index:1;opacity:.35;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
+    <!-- HERO CAROUSEL -->
+    <div style="position:relative">
+      <div id="cdc-hero-slider" style="display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;scrollbar-width:none;touch-action:pan-x">
+        <sc-for list="{{ heroMoviesVm }}" as="h" hint-placeholder-count="7">
+          <div style="flex:none;width:100%;scroll-snap-align:start;position:relative;overflow:hidden;isolation:isolate;touch-action:pan-x">
+            <image-slot id="{{ h.bgSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="Imagen de fondo" style="position:absolute;inset:0;width:100%;height:100%;opacity:.45;pointer-events:none"></image-slot>
+            <div style="position:absolute;inset:0;background:var(--gradHero);z-index:1"></div>
+            <div style="position:absolute;inset:0;z-index:1;opacity:.3;mix-blend-mode:screen;background:radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 45%), radial-gradient(circle at 80% 70%, var(--blue) 0%, transparent 50%)"></div>
+            <!-- Estrellas / partículas -->
+            <div style="position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden" aria-hidden="true">
+              <div class="cdc-star" style="left:6%;top:18%;width:2px;height:2px;--dur:5s;--del:0s"></div>
+              <div class="cdc-star" style="left:14%;top:65%;width:3px;height:3px;--dur:4.2s;--del:.6s"></div>
+              <div class="cdc-star" style="left:27%;top:38%;width:2px;height:2px;--dur:6s;--del:1.1s"></div>
+              <div class="cdc-star" style="left:40%;top:22%;width:2px;height:2px;--dur:5.3s;--del:.3s"></div>
+              <div class="cdc-star" style="left:58%;top:75%;width:3px;height:3px;--dur:4.6s;--del:.9s"></div>
+              <div class="cdc-star" style="left:70%;top:32%;width:2px;height:2px;--dur:7s;--del:.2s"></div>
+              <div class="cdc-star" style="left:82%;top:55%;width:2px;height:2px;--dur:5s;--del:1.4s"></div>
+              <div class="cdc-star" style="left:91%;top:20%;width:3px;height:3px;--dur:6.2s;--del:.7s"></div>
+              <div class="cdc-star" style="left:48%;top:50%;width:2px;height:2px;--dur:4.9s;--del:1.7s"></div>
+              <div class="cdc-star" style="left:74%;top:10%;width:2px;height:2px;--dur:5.5s;--del:1s"></div>
+            </div>
 
-      <!-- Estrellas / partículas -->
-      <div class="hero-stars" aria-hidden="true">
-        <div class="star" style="left:5%;  top:15%; --dur:5s;  --del:0s;  width:2px;height:2px;"></div>
-        <div class="star" style="left:12%; top:70%; --dur:4s;  --del:.5s; width:3px;height:3px;"></div>
-        <div class="star" style="left:25%; top:40%; --dur:6s;  --del:1s;  width:2px;height:2px;"></div>
-        <div class="star" style="left:38%; top:20%; --dur:5.5s;--del:.3s; width:2px;height:2px;"></div>
-        <div class="star" style="left:55%; top:80%; --dur:4.5s;--del:.8s; width:3px;height:3px;"></div>
-        <div class="star" style="left:68%; top:35%; --dur:7s;  --del:.2s; width:2px;height:2px;"></div>
-        <div class="star" style="left:80%; top:60%; --dur:5s;  --del:1.2s;width:2px;height:2px;"></div>
-        <div class="star" style="left:90%; top:25%; --dur:6s;  --del:.6s; width:3px;height:3px;"></div>
-        <div class="star" style="left:45%; top:55%; --dur:4.8s;--del:1.5s;width:2px;height:2px;"></div>
-        <div class="star" style="left:72%; top:10%; --dur:5.2s;--del:.9s; width:2px;height:2px;"></div>
-        <div class="star" style="left:18%; top:88%; --dur:6.5s;--del:.4s; width:3px;height:3px;"></div>
-        <div class="star" style="left:60%; top:50%; --dur:3.8s;--del:1.8s;width:2px;height:2px;"></div>
-      </div>
-
-      <div class="hero-grid" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
-        <div>
-          <div class="hero-badge" style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid oklch(0.60 0.235 25 / 40%);background:oklch(0.60 0.235 25 / 10%);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
-            <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
-          </div>
-          <h1 class="cdc-disp hero-title hero-title-text" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ featured.title }}</h1>
-          <p class="hero-tagline" style="margin:12px 0 0;font-size:19px;font-style:italic;color:var(--gray)">"{{ featured.tagline }}"</p>
-          <div class="hero-meta" style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
-            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ featured.score }}/10</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span>{{ featured.genre }}</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ featured.duration }}</span>
-            <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
-            <span style="border:1px solid oklch(1 0 0 / 30%);border-radius:4px;padding:1px 7px;font-size:10px">{{ featured.rating }}</span>
-          </div>
-          <p class="hero-synopsis" style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:oklch(1 0 0 / 80%)">{{ featured.synopsis }}</p>
-          <div class="hero-actions" style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
-            <button onClick="{{ buyFeatured }}" class="cta-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
-            <button onClick="{{ openTrailer }}" class="cta-secondary"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
-          </div>
-        </div>
-
-        <div class="hero-poster hero-poster-wrap" style="position:relative">
-          <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster),0 0 80px oklch(0.60 0.235 25 / .15);outline:1px solid var(--border)">
-            <image-slot id="cdc-poster-featured" fit="cover" src="posters/toystory.png" placeholder="Póster Toy Story 5" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-            <div class="poster-grad"></div>
-            <div class="poster-grad-left"></div>
-            <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
+            <div class="cdc-hero-grid" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.2fr 1fr;padding:88px 32px 120px;align-items:center">
               <div>
-                <div class="cdc-disp" style="font-size:22px;color:#fff">EN CARTELERA</div>
-                <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">Desde el 24 de Junio</div>
+                <div class="hero-badge" style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid oklch(0.60 0.235 25 / 40%);background:oklch(0.60 0.235 25 / 10%);padding:6px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary)">
+                  <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Estreno de la semana
+                </div>
+                <h1 class="cdc-disp cdc-hero-h1 hero-title" style="margin:24px 0 0;font-size:118px;line-height:.88;color:#fff">{{ h.title }}</h1>
+                <div class="hero-meta" style="margin-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">
+                  <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ h.score }}/10</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span>{{ h.genre }}</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ h.duration }}</span>
+                  <span style="width:4px;height:4px;border-radius:50%;background:var(--gray);opacity:.5"></span>
+                  <span style="border:1px solid oklch(1 0 0 / 30%);border-radius:4px;padding:1px 7px;font-size:10px">{{ h.rating }}</span>
+                </div>
+                <p class="cdc-hero-synopsis hero-synopsis" style="margin-top:24px;max-width:36rem;font-size:16px;line-height:1.65;color:oklch(1 0 0 / 80%)">{{ h.synopsis }}</p>
+                <div class="cdc-hero-btns hero-btns" style="margin-top:32px;display:flex;flex-wrap:wrap;gap:12px">
+                  <button onClick="{{ h.onBuy }}" class="cdc-btn-primary" style="padding:15px 30px;font-size:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar entradas</button>
+                  <button onClick="{{ openTrailer }}" class="cdc-btn-secondary" style="padding:15px 30px;font-size:14px;"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:16px;height:16px"><polygon points="6 3 20 12 6 21 6 3"/></svg>Ver trailer</button>
+                </div>
               </div>
-              <span style="border-radius:30px;background:var(--primary);padding:4px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">IMAX</span>
+
+              <div class="cdc-hero-poster hero-poster" style="position:relative">
+                <div style="position:relative;aspect-ratio:2/3;width:100%;max-width:360px;margin-left:auto;border-radius:18px;overflow:hidden;box-shadow:var(--shadowPoster),0 0 70px oklch(0.60 0.235 25 / .12);outline:1px solid var(--border)">
+                  <image-slot id="{{ h.posterSlotId }}" fit="cover" src="{{ h.poster }}" placeholder="{{ h.title }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></image-slot>
+                  <div class="cdc-grad-poster-deep"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:20px">
+                    <div>
+                      <div class="cdc-disp" style="font-size:22px;color:#fff">EN CARTELERA</div>
+                      <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--gray)">Sala {{ h.sala }}</div>
+                    </div>
+                    <span style="border-radius:30px;background:var(--primary);padding:4px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ h.firstFormat }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </sc-for>
       </div>
-    </section>
+      <!-- Dots del carousel -->
+      <div style="position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:10">
+        <sc-for list="{{ heroDots }}" as="d" hint-placeholder-count="7">
+          <div style="{{ d.style }}"></div>
+        </sc-for>
+      </div>
+    </div>
 
-    <main style="max-width:1180px;margin:0 auto;padding:0 32px">
+    <main class="cdc-main" style="max-width:1180px;margin:0 auto;padding:0 32px">
 
       <!-- BILLBOARD -->
       <section id="cartelera" style="padding-top:96px">
         <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
           <div style="position:relative">
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Hoy en pantalla</div>
-            <h2 class="cdc-disp section-title" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Cartelera</h2>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Cartelera</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px;border-radius:30px;border:1px solid var(--border);background:var(--card);padding:5px">
-            <sc-for list="{{ dayTabs }}" as="d" hint-placeholder-count="4">
-              <button onClick="{{ d.onClick }}" style="{{ d.style }}">{{ d.label }}</button>
-            </sc-for>
+          <div style="position:relative">
+            <button onClick="{{ toggleCal }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);cursor:pointer;border-radius:30px;background:var(--card);padding:10px 18px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;transition:border-color .2s,background .2s">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              {{ calBtnLabel }}
+            </button>
+            <sc-if value="{{ calOpen }}">
+              <div class="cdc-cal-dropdown">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <button onClick="{{ prevMonth }}" style="{{ calArrowStyle }}">‹</button>
+                  <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">{{ calMonthLabel }}</span>
+                  <button onClick="{{ nextMonth }}" style="{{ calArrowStyle }}">›</button>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px;margin-bottom:4px">
+                  <sc-for list="{{ calDayLabels }}" as="dn" hint-placeholder-count="7">
+                    <div style="text-align:center;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gray);padding:4px 0">{{ dn }}</div>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,34px);gap:2px">
+                  <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                    <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.day }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
           </div>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
           <sc-for list="{{ movies }}" as="m" hint-placeholder-count="7">
-            <article class="movie-card">
+            <article class="cdc-movie-card">
               <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
                 <image-slot id="{{ m.slotId }}" fit="cover" src="{{ m.poster }}" placeholder="{{ m.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-                <div class="poster-grad"></div>
-                <!-- Sinopsis en hover (capa sobre la imagen) -->
-                <div class="hover-synopsis">{{ m.synopsis }}</div>
+                <div class="cdc-grad-poster-deep"></div>
+                <!-- Sinopsis en hover -->
+                <div class="cdc-movie-synopsis-hover">{{ m.synopsis }}</div>
                 <div style="position:absolute;left:12px;top:12px;z-index:2;display:flex;align-items:center;gap:4px;border-radius:30px;background:oklch(0.07 0 0 / .8);padding:4px 10px;font-size:11px;font-weight:800;color:#fff;backdrop-filter:blur(4px)"><svg viewBox="0 0 24 24" fill="var(--primary)" stroke="var(--primary)" style="width:12px;height:12px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{{ m.score }}</div>
                 <div style="position:absolute;right:12px;top:12px;z-index:2;border:1px solid oklch(1 0 0 / 40%);border-radius:4px;background:oklch(0.07 0 0 / .7);padding:2px 7px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff;backdrop-filter:blur(4px)">{{ m.rating }}</div>
                 <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2;display:flex;flex-wrap:wrap;gap:6px">
@@ -511,11 +494,11 @@
                   <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:oklch(1 0 0 / 70%)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Horarios</div>
                   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
                     <sc-for list="{{ m.schedule }}" as="t" hint-placeholder-count="4">
-                      <button onClick="{{ t.onClick }}" class="schedule-btn">{{ t.time }}</button>
+                      <button onClick="{{ t.onClick }}" class="cdc-sched-btn">{{ t.time }}</button>
                     </sc-for>
                   </div>
                 </div>
-                <button onClick="{{ m.onComprar }}" class="cta-primary" style="margin-top:20px;justify-content:center;padding:11px 16px;font-size:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
+                <button onClick="{{ m.onComprar }}" class="cdc-btn-primary" style="margin-top:20px;padding:11px 16px;font-size:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Comprar</button>
               </div>
             </article>
           </sc-for>
@@ -527,7 +510,7 @@
         <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
           <div style="position:relative">
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Reserva antes que nadie</div>
-            <h2 class="cdc-disp section-title" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
+            <h2 class="cdc-disp" style="margin:8px 0 0;font-size:52px;letter-spacing:2px;color:#fff">Próximos estrenos</h2>
             <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
           </div>
           <div style="display:inline-flex;align-items:center;gap:8px;border-radius:30px;border:1px solid oklch(0.60 0.235 25 / 40%);background:oklch(0.60 0.235 25 / 10%);padding:8px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--primary)"><span style="width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cdcpulse 1.6s infinite"></span>Preventa abierta</div>
@@ -535,10 +518,10 @@
 
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:24px">
           <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="4">
-            <article class="upcoming-card">
+            <article class="cdc-upcoming-card">
               <div style="position:relative;aspect-ratio:2/3;overflow:hidden">
                 <image-slot id="{{ u.slotId }}" fit="cover" src="{{ u.poster }}" placeholder="{{ u.posterHint }}" style="position:absolute;inset:0;width:100%;height:100%"></image-slot>
-                <div class="poster-grad"></div>
+                <div class="cdc-grad-poster-deep"></div>
                 <div style="position:absolute;left:12px;top:12px;z-index:2;border-radius:30px;background:var(--gradRed);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;box-shadow:var(--shadowRed)">Preventa</div>
                 <div style="position:absolute;left:12px;right:12px;bottom:12px;z-index:2">
                   <div class="cdc-disp" style="font-size:30px;letter-spacing:1px;color:#fff;line-height:.9">{{ u.dateBig }}</div>
@@ -549,7 +532,7 @@
                 <h3 class="cdc-disp" style="margin:0;font-size:26px;letter-spacing:1px;color:#fff">{{ u.title }}</h3>
                 <p style="margin:4px 0 0;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ u.genre }} · {{ u.duration }}</p>
                 <p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:oklch(1 0 0 / 70%);flex:1">{{ u.synopsis }}</p>
-                <button onClick="{{ u.onPreorder }}" class="cta-primary" style="margin-top:20px;justify-content:center;padding:11px 16px;font-size:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
+                <button onClick="{{ u.onPreorder }}" class="cdc-btn-primary" style="margin-top:20px;padding:11px 16px;font-size:12px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>Comprar en preventa</button>
               </div>
             </article>
           </sc-for>
@@ -560,18 +543,18 @@
       <section style="padding-top:112px">
         <div style="position:relative;margin-bottom:40px">
           <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Vive el cine</div>
-          <h2 class="cdc-disp section-title" style="margin:8px 0 0;font-size:48px;letter-spacing:2px;color:#fff">Experiencias premium</h2>
+          <h2 class="cdc-disp" style="margin:8px 0 0;font-size:48px;letter-spacing:2px;color:#fff">Experiencias premium</h2>
           <div style="width:64px;height:4px;background:var(--primary);margin-top:12px;border-radius:2px"></div>
         </div>
-        <div class="exp-grid" style="display:grid;gap:20px;grid-template-columns:repeat(3,1fr)">
+        <div class="cdc-exp-grid" style="display:grid;gap:20px;grid-template-columns:repeat(3,1fr)">
           <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="3">
-            <div class="exp-card">
-              <div style="position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:oklch(0.60 0.235 25 / 12%);filter:blur(48px);pointer-events:none"></div>
-              <div style="position:relative">
+            <div class="cdc-exp-card">
+              <div style="position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:oklch(0.60 0.235 25 / 12%);filter:blur(48px);pointer-events:none;z-index:0"></div>
+              <div style="position:relative;z-index:1">
                 <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">{{ x.tag }}</span>
                 <div class="cdc-disp" style="margin-top:12px;font-size:52px;letter-spacing:3px;color:#fff">{{ x.name }}</div>
                 <p style="margin-top:16px;font-size:14px;line-height:1.6;color:var(--gray)">{{ x.desc }}</p>
-                <div style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;cursor:pointer;transition:gap .2s">Conocer más <span style="transition:transform .2s;display:inline-block">→</span></div>
+                <div style="margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">Conocer más <span>→</span></div>
               </div>
             </div>
           </sc-for>
@@ -579,19 +562,18 @@
       </section>
 
       <!-- PROMO -->
-      <section style="padding-top:112px;padding-bottom:112px">
+      <section id="promociones" style="padding-top:112px;padding-bottom:112px">
         <div style="position:relative;overflow:hidden;border-radius:24px;border:1px solid oklch(0.60 0.235 25 / 30%);background:var(--blue);padding:56px">
           <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 80% 50%, var(--primary) 0%, transparent 55%)"></div>
-          <!-- Brillo extra en la esquina -->
-          <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:oklch(0.60 0.235 25 / .08);filter:blur(60px);pointer-events:none"></div>
-          <div class="promo-grid" style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
+          <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:oklch(0.60 0.235 25 / .07);filter:blur(56px);pointer-events:none"></div>
+          <div class="cdc-promo-grid" style="position:relative;display:grid;align-items:center;gap:32px;grid-template-columns:1.4fr 1fr">
             <div>
               <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Martes 2x1</div>
               <h3 class="cdc-disp" style="margin:12px 0 0;font-size:46px;letter-spacing:1px;color:#fff">Dos entradas. Un precio. Todos los martes.</h3>
               <p style="margin:16px 0 0;max-width:32rem;font-size:16px;color:oklch(1 0 0 / 80%)">Disfruta el mejor cine acompañado. Válido en salas 2D presentando tu credencial Cinemas del Country Club.</p>
             </div>
-            <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
-              <button onClick="{{ buyFeatured }}" class="cta-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Aprovechar promo</button>
+            <div class="cdc-promo-btns" style="display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+              <button onClick="{{ buyFeatured }}" class="cdc-btn-primary" style="padding:15px 30px;font-size:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 11v2"/><path d="M13 17v2"/></svg>Aprovechar promo</button>
               <span style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Aplican términos y condiciones</span>
             </div>
           </div>
@@ -600,8 +582,8 @@
     </main>
 
     <!-- FOOTER -->
-    <footer style="border-top:1px solid var(--border);background:oklch(0.05 0 0)">
-      <div class="footer-grid" style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
+    <footer id="contacto" style="border-top:1px solid var(--border);background:oklch(0.05 0 0)">
+      <div class="cdc-footer-grid" style="max-width:1180px;margin:0 auto;display:grid;gap:40px;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:56px 32px">
         <div>
           <div style="display:flex;align-items:center;gap:12px">
             <img src="cinemas-logo.png" alt="Cinemas del Country" style="width:46px;height:46px;object-fit:contain" />
@@ -612,8 +594,8 @@
           </div>
           <p style="margin-top:16px;max-width:20rem;font-size:14px;color:var(--gray);line-height:1.6">La mejor experiencia de cine. Estrenos, salas premium y promociones todo el año.</p>
           <div style="margin-top:16px;display:flex;gap:8px">
-            <a href="#" aria-label="Facebook" style="{{ iconBtnStyle }};transition:transform .2s,background .2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
-            <a href="#" aria-label="Instagram" style="{{ iconBtnStyle }};transition:transform .2s,background .2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" aria-label="Facebook" class="cdc-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="Instagram" class="cdc-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
           </div>
         </div>
         <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
@@ -621,7 +603,7 @@
             <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--primary);margin-bottom:4px">{{ col.title }}</div>
             <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
               <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
-                <a href="#" class="footer-link">{{ l }}</a>
+                <a href="#" class="cdc-footer-link">{{ l }}</a>
               </sc-for>
             </div>
           </div>
@@ -634,7 +616,7 @@
 
   <!-- ================= SEATS ================= -->
   <sc-if value="{{ isSeats }}" hint-placeholder-val="{{ true }}">
-  <main style="max-width:780px;margin:0 auto;padding:34px 32px 140px">
+  <main class="cdc-seat-main" style="max-width:780px;margin:0 auto;padding:34px 32px 140px">
     <button onClick="{{ goHome }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:14px;transition:color .2s">← Volver a la cartelera</button>
     <div style="text-align:center;margin-bottom:30px">
       <sc-if value="{{ isPreorder }}" hint-placeholder-val="{{ false }}">
@@ -647,7 +629,7 @@
     <div class="cdc-disp" style="text-align:center;font-size:14px;letter-spacing:10px;color:var(--gray)">PANTALLA</div>
     <div style="height:30px;width:80%;margin:8px auto 38px;border-top:3px solid var(--primary);border-radius:50% / 100% 100% 0 0;box-shadow:0 -12px 30px -12px var(--primary)"></div>
 
-    <div style="display:flex;flex-direction:column;gap:9px;align-items:center;margin-bottom:34px">
+    <div class="cdc-seat-scroll"><div style="display:flex;flex-direction:column;gap:9px;align-items:center;margin-bottom:34px">
       <sc-for list="{{ seatRows }}" as="row" hint-placeholder-count="8">
         <div style="display:flex;align-items:center;gap:12px">
           <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
@@ -659,7 +641,7 @@
           <div style="width:16px;text-align:center;font-size:11px;font-weight:800;color:var(--gray)">{{ row.label }}</div>
         </div>
       </sc-for>
-    </div>
+    </div></div>
 
     <div style="display:flex;justify-content:center;gap:22px;flex-wrap:wrap;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">
       <div style="display:flex;align-items:center;gap:7px"><span style="width:15px;height:14px;border-radius:5px 5px 2px 2px;border:1px solid var(--gray);background:var(--card)"></span>Disponible</div>
@@ -670,7 +652,7 @@
   </main>
 
   <div style="position:fixed;left:0;right:0;bottom:0;z-index:40;background:oklch(0.07 0 0 / .96);border-top:1px solid var(--border);backdrop-filter:blur(16px)">
-    <div style="max-width:780px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px">
+    <div class="cdc-seat-bar-inner" style="max-width:780px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px">
       <div>
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ seatCountLabel }}</div>
         <div style="font-size:14px;font-weight:700;color:#fff;max-width:34ch">{{ seatListLabel }}</div>
@@ -688,27 +670,49 @@
 
   <!-- ================= CHECKOUT ================= -->
   <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ true }}">
-  <main style="max-width:980px;margin:0 auto;padding:34px 32px 100px">
+  <main class="cdc-checkout-main" style="max-width:980px;margin:0 auto;padding:34px 32px 100px">
     <button onClick="{{ backToSeats }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;margin-bottom:18px;transition:color .2s">← Volver a asientos</button>
     <h1 class="cdc-disp" style="margin:0 0 28px;font-size:44px;letter-spacing:1px;color:#fff">Confirmar y pagar</h1>
-    <div class="checkout-grid" style="display:grid;grid-template-columns:1fr 360px;gap:42px;align-items:start">
+    <div class="cdc-checkout-grid" style="display:grid;grid-template-columns:1fr 360px;gap:42px;align-items:start">
       <div style="display:flex;flex-direction:column;gap:26px">
         <div>
           <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Datos del comprador</div>
           <div style="display:flex;flex-direction:column;gap:12px">
-            <input placeholder="Nombre completo" style="{{ inputStyle }}" />
-            <input placeholder="Correo electrónico" style="{{ inputStyle }}" />
+            <input placeholder="Nombre completo" value="{{ form.name }}" onChange="{{ onInputName }}" style="{{ inputStyle }}" />
+            <input placeholder="Correo electrónico" value="{{ form.email }}" onChange="{{ onInputEmail }}" style="{{ inputStyle }}" />
           </div>
         </div>
         <div>
           <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:14px">Método de pago</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+            <button onClick="{{ selectCard }}" style="{{ tabCardStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Tarjeta</button>
+            <button onClick="{{ selectSpei }}" style="{{ tabSpeiStyle }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 6h-8M21 18h-8"/></svg>SPEI</button>
+          </div>
+          <sc-if value="{{ payCard }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;flex-direction:column;gap:12px">
-            <input placeholder="Número de tarjeta" style="{{ inputStyle }}" />
+            <input placeholder="Número de tarjeta" value="{{ form.card }}" onChange="{{ onInputCard }}" style="{{ inputStyle }}" />
             <div style="display:flex;gap:12px">
-              <input placeholder="MM / AA" style="{{ inputStyle }};flex:1" />
-              <input placeholder="CVV" style="{{ inputStyle }};flex:1" />
+              <input placeholder="MM / AA" value="{{ form.expiry }}" onChange="{{ onInputExpiry }}" style="{{ inputStyle }};flex:1" />
+              <input placeholder="CVV" value="{{ form.cvv }}" onChange="{{ onInputCvv }}" style="{{ inputStyle }};flex:1" />
             </div>
           </div>
+          </sc-if>
+          <sc-if value="{{ paySpei }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid var(--border);border-radius:14px;background:oklch(0.07 0 0 / .4);padding:20px">
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px">Transfiere desde tu app bancaria</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:18px">El dinero llega al instante a la cuenta del cine.</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Banco destino</span><span style="font-size:14px;font-weight:700;color:#fff">{{ speiBank }}</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Beneficiario</span><span style="font-size:14px;font-weight:700;color:#fff;text-align:right">{{ speiBeneficiario }}</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+                <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:3px">CLABE</div><div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;font-variant-numeric:tabular-nums">{{ speiClabe }}</div></div>
+                <button onClick="{{ copyClabe }}" style="flex:none;border:1px solid var(--border);background:transparent;cursor:pointer;border-radius:8px;padding:8px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);transition:background .2s,border-color .2s">{{ copyLabel }}</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid var(--border);padding-top:14px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Referencia</span><span style="font-size:14px;font-weight:700;color:#fff">{{ speiRef }}</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Monto exacto</span><span class="cdc-disp" style="font-size:22px;color:var(--primary)">{{ grandTotalLabel }}</span></div>
+            </div>
+          </div>
+          </sc-if>
         </div>
       </div>
 
@@ -727,7 +731,10 @@
           <span class="cdc-disp" style="font-size:20px;letter-spacing:1px;color:#fff">TOTAL</span>
           <span class="cdc-disp" style="font-size:30px;color:var(--primary)">{{ grandTotalLabel }}</span>
         </div>
-        <button onClick="{{ confirmPurchase }}" class="cta-primary" style="width:100%;justify-content:center;padding:15px;">Pagar {{ grandTotalLabel }}</button>
+        <sc-if value="{{ formError }}">
+          <div style="margin-bottom:12px;padding:10px 14px;border-radius:8px;background:oklch(0.60 0.235 25 / 0.12);border:1px solid oklch(0.60 0.235 25 / 0.4);font-size:12px;color:#ffaaaa;text-align:center">{{ formError }}</div>
+        </sc-if>
+        <button onClick="{{ confirmPurchase }}" class="cdc-btn-primary" style="width:100%;padding:15px;font-size:14px;">{{ payCtaLabel }}</button>
         <div style="margin-top:12px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Pago seguro · Cancelación hasta 2h antes</div>
       </div>
     </div>
@@ -764,14 +771,189 @@
         </div>
       </div>
       <div style="border-top:2px dashed var(--border);padding:16px 26px;display:flex;justify-content:space-between;align-items:center;background:oklch(0.07 0 0)">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--gray)">CÓDIGO {{ bookingCode }}</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--gray)">CÓDIGO {{ lastCode }}</div>
         <div class="cdc-disp" style="font-size:22px;color:var(--primary)">{{ grandTotalLabel }}</div>
       </div>
     </div>
 
+    <sc-if value="{{ bankConnected }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:22px;display:inline-flex;align-items:center;gap:9px;border-radius:30px;border:1px solid oklch(0.72 0.17 150 / 35%);background:oklch(0.72 0.17 150 / 12%);padding:10px 18px;font-size:12px;font-weight:700;color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="20 6 9 17 4 12"/></svg>{{ depositNoteLabel }} · {{ depositBankLabel }}</div>
+    </sc-if>
     <p style="margin:24px 0 28px;font-size:13px;color:var(--gray);line-height:1.6">Hemos enviado tu e-ticket por correo. Presenta el código QR en la entrada de la sala.</p>
-    <button onClick="{{ goHome }}" class="cta-secondary" style="padding:13px 32px;">Volver a la cartelera</button>
+    <button onClick="{{ goHome }}" class="cdc-btn-secondary" style="padding:13px 32px;font-size:14px;">Volver a la cartelera</button>
   </main>
+  </sc-if>
+
+  <!-- ================= LOGIN PROPIETARIO ================= -->
+  <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:400px;margin:0 auto;padding:60px 32px 120px">
+    <button onClick="{{ goHome }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;transition:color .2s">← Volver al sitio</button>
+    <div style="border-radius:22px;border:1px solid var(--border);background:var(--card);padding:38px 32px;text-align:center;margin-top:14px;box-shadow:var(--shadowPoster)">
+      <div style="width:60px;height:60px;border-radius:50%;background:oklch(0.60 0.235 25 / 16%);display:grid;place-items:center;margin:0 auto;color:var(--primary)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h1 class="cdc-disp" style="margin:18px 0 4px;font-size:32px;letter-spacing:1px;color:#fff">Acceso del propietario</h1>
+      <p style="margin:0;font-size:13px;color:var(--gray)">Panel privado · ingresa tu código</p>
+
+      <div style="display:flex;justify-content:center;gap:16px;margin:26px 0 8px">
+        <sc-for list="{{ pinDots }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.style }}"></div>
+        </sc-for>
+      </div>
+      <div style="height:20px;margin-bottom:14px">
+        <sc-if value="{{ pinError }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12px;font-weight:700;color:var(--primary)">Código incorrecto, intenta de nuevo</span>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <sc-for list="{{ keypadVm }}" as="k" hint-placeholder-count="12">
+          <button onClick="{{ k.onClick }}" style="{{ k.style }}">{{ k.label }}</button>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:22px;display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--gray)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>{{ accessHint }}</div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ================= PAYOUTS ================= -->
+  <sc-if value="{{ isPayouts }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:1080px;margin:0 auto;padding:34px 32px 120px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <button onClick="{{ goHome }}" style="border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray);padding:8px 0;transition:color .2s">← Volver al sitio</button>
+      <button onClick="{{ lockOwner }}" style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:transparent;cursor:pointer;border-radius:30px;padding:8px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);transition:border-color .2s,color .2s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Cerrar sesión</button>
+    </div>
+
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:4px;color:var(--primary)">Panel del cine</div>
+    <h1 class="cdc-disp" style="margin:8px 0 6px;font-size:48px;letter-spacing:1px;color:#fff">Pagos y transferencias</h1>
+    <p style="margin:0 0 36px;font-size:15px;color:var(--gray);max-width:46rem">Conecta la cuenta bancaria del cine para que el dinero de cada venta con tarjeta caiga directo a tu banco.</p>
+
+    <sc-if value="{{ bankNotConnected }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:42px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <sc-for list="{{ payBenefits }}" as="b" hint-placeholder-count="3">
+          <div style="display:flex;gap:16px;align-items:flex-start;border:1px solid var(--border);border-radius:16px;background:var(--card);padding:22px">
+            <div class="cdc-disp" style="flex:none;width:42px;height:42px;border-radius:12px;background:oklch(0.60 0.235 25 / 16%);display:grid;place-items:center;color:var(--primary);font-size:22px">{{ b.num }}</div>
+            <div>
+              <div style="font-size:15px;font-weight:800;color:#fff">{{ b.title }}</div>
+              <div style="margin-top:5px;font-size:13px;line-height:1.55;color:var(--gray)">{{ b.desc }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-radius:18px;border:1px solid var(--border);background:var(--card);padding:28px">
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:6px">Conecta tu cuenta</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:18px">Selecciona el banco del cine</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px">
+          <sc-for list="{{ banksVm }}" as="bk" hint-placeholder-count="8">
+            <button onClick="{{ bk.onClick }}" style="{{ bk.style }}">{{ bk.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px">Titular de la cuenta</label>
+            <input value="{{ bankFormHolder }}" onChange="{{ onHolder }}" placeholder="Nombre del titular o razón social" style="{{ inputStyle }}" />
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-bottom:6px">CLABE interbancaria</label>
+            <input value="{{ bankFormClabe }}" onChange="{{ onClabe }}" inputmode="numeric" placeholder="18 dígitos" style="{{ inputStyle }};letter-spacing:2px;font-variant-numeric:tabular-nums" />
+            <div style="margin-top:5px;font-size:11px;color:var(--gray)">{{ clabeCountLabel }}</div>
+          </div>
+        </div>
+        <button onClick="{{ connectBank }}" style="{{ connectBtnStyle }}">Conectar cuenta</button>
+        <div style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gray)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Conexión cifrada · datos protegidos</div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ bankConnected }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin-bottom:36px">
+      <div style="border-radius:18px;border:1px solid var(--border);background:var(--card);padding:26px;display:flex;flex-direction:column;justify-content:space-between">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">Cuenta conectada</div>
+            <div class="cdc-disp" style="font-size:34px;letter-spacing:1px;color:#fff;margin-top:6px">{{ bankBankName }}</div>
+          </div>
+          <span style="display:inline-flex;align-items:center;gap:6px;border-radius:30px;background:oklch(0.72 0.17 150 / 16%);padding:5px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--green)"><span style="width:6px;height:6px;border-radius:50%;background:var(--green)"></span>Activa</span>
+        </div>
+        <div style="margin-top:24px">
+          <div style="font-size:18px;font-weight:700;color:#fff;letter-spacing:2px;font-variant-numeric:tabular-nums">{{ clabeMasked }}</div>
+          <div style="margin-top:4px;font-size:12px;color:var(--gray)">{{ bankHolder }}</div>
+        </div>
+        <button onClick="{{ disconnectBank }}" style="margin-top:22px;align-self:flex-start;border:1px solid var(--border);background:transparent;cursor:pointer;border-radius:30px;padding:9px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);transition:border-color .2s,color .2s">Desconectar</button>
+      </div>
+      <div style="border-radius:18px;border:1px solid oklch(0.60 0.235 25 / 25%);background:var(--blue);padding:26px;position:relative;overflow:hidden">
+        <div style="position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:oklch(0.72 0.17 150 / 18%);filter:blur(46px)"></div>
+        <div style="position:relative">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:oklch(1 0 0 / 70%)">Recibido en tu cuenta</div>
+          <div class="cdc-disp" style="font-size:56px;letter-spacing:1px;color:#fff;margin-top:4px;line-height:1">{{ totalNetLabel }}</div>
+          <div style="margin-top:14px;display:flex;gap:30px">
+            <div><div style="font-size:11px;color:oklch(1 0 0 / 65%)">Transferencias</div><div style="font-size:18px;font-weight:800;color:#fff">{{ depositsCount }}</div></div>
+            <div><div style="font-size:11px;color:oklch(1 0 0 / 65%)">Comisión total</div><div style="font-size:18px;font-weight:800;color:#fff">{{ feeTotalLabel }}</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="border-radius:18px;border:1px solid var(--border);background:var(--card);overflow:hidden">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff">Transferencias recibidas</div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray)">Depositadas automáticamente</div>
+      </div>
+      <sc-for list="{{ depositsVm }}" as="d" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:16px;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#fff">{{ d.movie }}</div>
+            <div style="font-size:11px;color:var(--gray);margin-top:2px">{{ d.code }} · {{ d.methodLabel }} · {{ d.date }} {{ d.time }}</div>
+          </div>
+          <div style="font-size:13px;color:var(--gray)">Venta <span style="color:#fff;font-weight:600">{{ d.amountLabel }}</span></div>
+          <div style="font-size:14px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums">{{ d.netLabel }}</div>
+          <span style="{{ d.badgeStyle }}">{{ d.status }}</span>
+        </div>
+      </sc-for>
+      <div style="padding:16px 24px;font-size:11px;color:var(--gray)">Se descuenta una comisión de 3.5% por procesamiento de tarjeta. El resto se deposita a tu CLABE.</div>
+    </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ================= PROCESANDO PAGO ================= -->
+  <sc-if value="{{ payProcessing }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:oklch(0.07 0 0 / .93);backdrop-filter:blur(8px)">
+    <div class="cdc-spin" style="width:64px;height:64px;border-radius:50%;border:4px solid var(--border);border-top-color:var(--primary)"></div>
+    <div style="text-align:center">
+      <div class="cdc-disp" style="font-size:32px;letter-spacing:1px;color:#fff">Procesando pago</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--gray)">{{ payProcessingLabel }}</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= SEARCH MODAL ================= -->
+  <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:95">
+    <div onClick="{{ closeSearch }}" style="position:absolute;inset:0;background:oklch(0 0 0 / .8);backdrop-filter:blur(8px)"></div>
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;padding:72px 16px 32px;pointer-events:none">
+      <div style="width:100%;max-width:600px;pointer-events:auto">
+        <div style="display:flex;align-items:center;gap:12px;border-radius:14px;border:1px solid var(--border);background:var(--card);padding:14px 20px;box-shadow:0 20px 60px -10px oklch(0 0 0 / .6)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0;color:var(--gray)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input value="{{ searchQuery }}" onInput="{{ onSearchQuery }}" placeholder="Buscar película o género…" autofocus style="background:transparent;border:none;outline:none;font-family:inherit;font-size:16px;color:#fff;width:100%;min-width:0">
+          <button onClick="{{ closeSearch }}" style="background:transparent;border:none;cursor:pointer;color:var(--gray);font-size:20px;padding:0;line-height:1;flex-shrink:0">✕</button>
+        </div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{ searchResultsVm }}" as="sr" hint-placeholder-count="0">
+            <button onClick="{{ sr.onClick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);background:var(--card);border-radius:12px;padding:14px 16px;cursor:pointer;width:100%;text-align:left;font-family:inherit;transition:border-color .2s">
+              <div>
+                <div style="font-size:15px;font-weight:700;color:#fff">{{ sr.title }}</div>
+                <div style="margin-top:3px;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gray)">{{ sr.genre }}</div>
+              </div>
+              <span style="flex-shrink:0;border-radius:30px;padding:4px 10px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;{{ sr.badgeStyle }}">{{ sr.badge }}</span>
+            </button>
+          </sc-for>
+          <sc-if value="{{ searchEmpty }}">
+            <div style="text-align:center;padding:32px;color:var(--gray);font-size:14px">Sin resultados para "{{ searchQuery }}"</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
   </sc-if>
 
   <!-- ================= TRAILER MODAL ================= -->
@@ -785,7 +967,7 @@
         </div>
         <button onClick="{{ closeTrailer }}" style="border:1px solid var(--border);background:transparent;cursor:pointer;color:#fff;border-radius:30px;padding:8px 18px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:background .2s,border-color .2s">Cerrar ✕</button>
       </div>
-      <div style="position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:oklch(0.11 0.005 260);display:flex;align-items:center;justify-content:center;border:1px solid var(--border);box-shadow:0 32px 80px oklch(0 0 0 / .6)">
+      <div style="position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:oklch(0.11 0.005 260);display:flex;align-items:center;justify-content:center;border:1px solid var(--border);box-shadow:0 28px 72px oklch(0 0 0 / .55)">
         <div style="position:absolute;inset:0;opacity:.4;background:radial-gradient(circle at 50% 50%, var(--primary) 0%, transparent 60%)"></div>
         <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:16px">
           <div style="width:74px;height:74px;border-radius:50%;background:var(--gradRed);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadowRed);transition:transform .2s"><svg viewBox="0 0 24 24" fill="#fff" stroke="none" style="width:28px;height:28px;margin-left:4px"><polygon points="6 3 20 12 6 21 6 3"/></svg></div>
@@ -802,35 +984,48 @@
 class Component extends DCLogic {
   state = {
     screen: 'home',
-    day: 0,
+    calOpen: false,
+    calYear: new Date().getFullYear(),
+    calMonth: new Date().getMonth(),
+    selectedDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
     movieIndex: 0,
     showtime: null,
     seats: [],
     trailerOpen: false,
     source: 'movies',
+    form: { name: '', email: '', card: '', expiry: '', cvv: '' },
+    formError: '',
+    payProcessing: false,
+    lastCode: 'CDC-7F2A9',
+    bankConnected: false,
+    bankInfo: null,
+    bankForm: { bank: '', bankId: '', holder: '', clabe: '' },
+    payMethod: 'card',
+    copied: false,
+    ownerAuth: false,
+    heroSlide: 0,
+    searchOpen: false,
+    searchQuery: '',
+    activeNav: 'Home',
+    pin: '',
+    pinError: false,
+    deposits: [
+      { movie:'Toy Story 5', amount:316, net:305, method:'Tarjeta', date:'Hoy', time:'10:42', code:'CDC-K2P9', status:'Depositado' },
+      { movie:'Disclosure Day', amount:178, net:178, method:'SPEI', date:'Hoy', time:'09:15', code:'CDC-M7Q1', status:'Depositado' },
+      { movie:'Scary Movie 6', amount:97, net:94, method:'Tarjeta', date:'Ayer', time:'21:30', code:'CDC-B4X8', status:'Depositado' },
+      { movie:'Leviticus: Ritual de Sangre', amount:238, net:238, method:'SPEI', date:'Ayer', time:'19:05', code:'CDC-T6R3', status:'Depositado' },
+    ],
   };
-
-  featured() {
-    return {
-      title: 'TOY STORY 5',
-      tagline: 'La aventura continúa',
-      synopsis: 'Woody, Buzz y toda la pandilla regresan en una nueva aventura llena de emoción, amistad y diversión para toda la familia.',
-      genre: 'Animación · Familiar',
-      duration: '1h 42min',
-      rating: 'AA',
-      score: '9.0',
-    };
-  }
 
   movieData() {
     return [
-      { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', synopsis:'Woody, Buzz y toda la pandilla regresan en una nueva aventura llena de emoción, amistad y diversión para toda la familia.', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'] },
-      { title:'Leviticus: Ritual de Sangre', genre:'Terror', duration:'1h 28m', rating:'B15', score:'7.4', sala:'5', formats:['ESP'], poster:'posters/leviticus.png', synopsis:'Una familia esconde un oscuro secreto generacional que resurge en la noche más aterradora de sus vidas.', schedule:['6:00','7:40','9:20'] },
-      { title:'Disclosure Day', genre:'Ciencia Ficción', duration:'2h 26m', rating:'B', score:'8.1', sala:'2', formats:['ESP','SUB'], poster:'posters/disclosure.png', synopsis:'El gobierno revela finalmente la existencia de vida extraterrestre, desencadenando una crisis global sin precedentes.', schedule:['12:30','3:10','6:00','8:40'] },
-      { title:'Letras Robadas', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'7.8', sala:'6', formats:['ESP'], poster:'posters/letras.png', synopsis:'Un músico veterano descubre que sus mejores canciones fueron plagiadas, y decide recuperarlas a cualquier costo.', schedule:['4:00'] },
-      { title:'Amos del Universo', genre:'Fantasía', duration:'2h 21m', rating:'TBC', score:'8.3', sala:'3', formats:['ESP'], poster:'posters/amos.png', synopsis:'He-Man regresa para enfrentar a Skeletor en una batalla épica por el control del Castillo Grayskull.', schedule:['3:20'] },
-      { title:'Scary Movie 6', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'6.9', sala:'4', formats:['ESP','SUB'], poster:'posters/scary.png', synopsis:'La parodia más irreverente de Hollywood vuelve con más chistes, susto y caos del que puedes imaginar.', schedule:['1:15','3:15','5:15','7:15','9:15'] },
-      { title:'Backrooms: Sin Salida', genre:'Suspenso', duration:'1h 50m', rating:'TBC', score:'7.2', sala:'7', formats:['ESP'], poster:'posters/backrooms.png', synopsis:'Un grupo queda atrapado en un laberinto infinito de pasillos amarillos donde la realidad deja de tener sentido.', schedule:['6:00','8:00'] },
+      { title:'Toy Story 5', genre:'Animación', duration:'1h 42m', rating:'AA', score:'9.0', sala:'1', formats:['ESP 2D','ESP 3D'], poster:'posters/toystory.png', schedule:['12:15','1:15','2:15','3:15','4:30','5:30','6:30','7:30','8:30','9:15'], synopsis:'Woody, Buzz y los amigos de Andy se enfrentan a nuevos cambios y aventuras que pondrán a prueba su amistad.' },
+      { title:'Leviticus: Ritual de Sangre', genre:'Terror', duration:'1h 28m', rating:'B15', score:'7.4', sala:'5', formats:['ESP'], poster:'posters/leviticus.png', schedule:['6:00','7:40','9:20'], synopsis:'Un antiguo ritual convoca fuerzas oscuras que amenazan con consumir todo a su paso.' },
+      { title:'Disclosure Day', genre:'Ciencia Ficción', duration:'2h 26m', rating:'B', score:'8.1', sala:'2', formats:['ESP','SUB'], poster:'posters/disclosure.png', schedule:['12:30','3:10','6:00','8:40'], synopsis:'Un exanalista de la CIA revela documentos clasificados que cambian para siempre la historia de la humanidad.' },
+      { title:'Letras Robadas', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'7.8', sala:'6', formats:['ESP'], poster:'posters/letras.png', schedule:['4:00'], synopsis:'Una comedia caótica sobre dos aspirantes a escritores cuya rivalidad se convierte en una aventura imprevista.' },
+      { title:'Amos del Universo', genre:'Fantasía', duration:'2h 21m', rating:'TBC', score:'8.3', sala:'3', formats:['ESP'], poster:'posters/amos.png', schedule:['3:20'], synopsis:'He-Man regresa al mundo real para detener al malvado Skeletor antes de que domine el universo entero.' },
+      { title:'Scary Movie 6', genre:'Comedia', duration:'1h 37m', rating:'B15', score:'6.9', sala:'4', formats:['ESP','SUB'], poster:'posters/scary.png', schedule:['1:15','3:15','5:15','7:15','9:15'], synopsis:'El regreso de la parodia más irreverente con nuevas víctimas, más absurdos y risas garantizadas.' },
+      { title:'Backrooms: Sin Salida', genre:'Suspenso', duration:'1h 50m', rating:'TBC', score:'7.2', sala:'7', formats:['ESP'], poster:'posters/backrooms.png', schedule:['6:00','8:00'], synopsis:'Un grupo de exploradores queda atrapado en infinitas habitaciones amarillas donde la realidad no existe.' },
     ];
   }
 
@@ -849,17 +1044,125 @@ class Component extends DCLogic {
     return 'ABC'.includes(id[0]) ? 119 : 79;
   }
 
-  goHome = () => { this.setState({ screen:'home' }); window.scrollTo(0,0); };
+  calc() {
+    const subtotal = this.state.seats.reduce((s,id)=>s+this.priceFor(id),0);
+    const fee = this.state.seats.length ? 18 : 0;
+    return { subtotal, fee, grand: subtotal+fee };
+  }
+  selNow() {
+    const list = this.state.source==='upcoming' ? this.upcomingData() : this.movieData();
+    return list[this.state.movieIndex] || this.movieData()[0];
+  }
+
+  goHome = () => { this.setState({ screen:'home', activeNav:'Home' }); window.scrollTo(0,0); };
+  openSearch = () => this.setState({ searchOpen:true, searchQuery:'' });
+  closeSearch = () => this.setState({ searchOpen:false });
+  onSearchQuery = (e) => this.setState({ searchQuery: e.target.value });
   openSeats = (idx, time) => { this.setState({ screen:'seats', source:'movies', movieIndex:idx, showtime:time, seats:[] }); window.scrollTo(0,0); };
   openPreorder = (idx) => { this.setState({ screen:'seats', source:'upcoming', movieIndex:idx, showtime:this.upcomingData()[idx].premiereTime || '20:00', seats:[] }); window.scrollTo(0,0); };
   buyFeatured = () => this.openSeats(0, this.movieData()[0].schedule[0]);
-  setDay = (i) => this.setState({ day:i });
+  goPayouts = () => { this.setState({ screen: this.state.ownerAuth ? 'payouts' : 'login', pin:'', pinError:false }); window.scrollTo(0,0); };
+  lockOwner = () => { this.setState({ ownerAuth:false, screen:'home' }); window.scrollTo(0,0); };
+  pressPin = (d) => {
+    this.setState(s => (s.pin.length>=4 ? null : { pin:s.pin+d, pinError:false }), () => {
+      if (this.state.pin.length===4) setTimeout(() => {
+        if (this.state.pin==='2470') this.setState({ ownerAuth:true, screen:'payouts', pin:'' });
+        else this.setState({ pin:'', pinError:true });
+      }, 200);
+    });
+  };
+  backPin = () => this.setState(s => ({ pin:s.pin.slice(0,-1), pinError:false }));
+  pickBank = (id,name) => this.setState(s => ({ bankForm:{ ...s.bankForm, bankId:id, bank:name } }));
+  onHolder = (e) => { const v = e.target.value; this.setState(s => ({ bankForm:{ ...s.bankForm, holder:v } })); };
+  onClabe = (e) => { const v = e.target.value.replace(/\D/g,'').slice(0,18); this.setState(s => ({ bankForm:{ ...s.bankForm, clabe:v } })); };
+  connectBank = () => {
+    const bf = this.state.bankForm;
+    if (!(bf.bankId && bf.holder.trim().length>2 && bf.clabe.length===18)) return;
+    this.setState({ bankConnected:true, bankInfo:{ bank:bf.bank, holder:bf.holder, last4:bf.clabe.slice(-4) } });
+    window.scrollTo(0,0);
+  };
+  disconnectBank = () => this.setState({ bankConnected:false, bankInfo:null });
+  selectCard = () => this.setState({ payMethod:'card' });
+  selectSpei = () => this.setState({ payMethod:'spei' });
+  copyClabe = () => {
+    try { navigator.clipboard && navigator.clipboard.writeText('012180012345678905'); } catch(e) {}
+    this.setState({ copied:true });
+    setTimeout(()=>this.setState({ copied:false }), 1500);
+  };
+  prevMonth = () => {
+    const { calYear, calMonth } = this.state;
+    if (calMonth === 0) this.setState({ calYear: calYear - 1, calMonth: 11 });
+    else this.setState({ calMonth: calMonth - 1 });
+  };
+  nextMonth = () => {
+    const { calYear, calMonth } = this.state;
+    if (calMonth === 11) this.setState({ calYear: calYear + 1, calMonth: 0 });
+    else this.setState({ calMonth: calMonth + 1 });
+  };
+  toggleCal = () => this.setState(s => ({ calOpen: !s.calOpen }));
+  selectDate = (year, month, day) => this.setState({ selectedDate: { year, month, day }, calOpen: false });
   toggleSeat = (id) => this.setState(s => ({ seats: s.seats.includes(id) ? s.seats.filter(x=>x!==id) : [...s.seats, id] }));
-  goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout' }); window.scrollTo(0,0); } };
+  setForm = (field, val) => this.setState(s => ({ form: { ...s.form, [field]: val }, formError: '' }));
+  goCheckout = () => { if (this.state.seats.length) { this.setState({ screen:'checkout', formError: '' }); window.scrollTo(0,0); } };
   backToSeats = () => { this.setState({ screen:'seats' }); window.scrollTo(0,0); };
-  confirmPurchase = () => { this.setState({ screen:'confirm' }); window.scrollTo(0,0); };
+  confirmPurchase = () => {
+    const f = this.state.form;
+    const pm = this.state.payMethod;
+    if (pm === 'card' && (!f.name.trim() || !f.email.trim() || !f.card.trim() || !f.expiry.trim() || !f.cvv.trim())) {
+      this.setState({ formError: 'Por favor completa todos los campos antes de continuar.' });
+      return;
+    }
+    const amount = this.calc().grand;
+    const title = this.selNow().title;
+    const code = 'CDC-' + Math.random().toString(36).slice(2,7).toUpperCase();
+    const net = pm==='spei' ? amount : Math.round(amount*0.965);
+    const mLabel = pm==='spei' ? 'SPEI' : 'Tarjeta';
+    this.setState({ payProcessing:true, formError:'' });
+    setTimeout(() => {
+      this.setState(s => ({
+        payProcessing:false, screen:'confirm', lastCode:code,
+        deposits: s.bankConnected
+          ? [{ movie:title, amount, net, method:mLabel, date:'Hoy', time:'justo ahora', code, status:'Depositado' }, ...s.deposits]
+          : s.deposits,
+      }));
+      window.scrollTo(0,0);
+    }, 1700);
+  };
   openTrailer = () => this.setState({ trailerOpen:true });
   closeTrailer = () => this.setState({ trailerOpen:false });
+
+  componentDidMount() {
+    this._heroTimer = setInterval(() => this._heroTick(), 3500);
+  }
+  componentDidUpdate() {
+    const el = document.getElementById('cdc-hero-slider');
+    if (el && !el._cdcListened) {
+      el._cdcListened = true;
+      el.addEventListener('touchstart', () => {
+        this._userPaused = true;
+        clearTimeout(this._pauseResume);
+        this._pauseResume = setTimeout(() => { this._userPaused = false; }, 5000);
+      }, { passive:true });
+      el.addEventListener('scroll', () => {
+        if (!el.clientWidth) return;
+        const slide = Math.round(el.scrollLeft / el.clientWidth);
+        if (slide !== this.state.heroSlide) this.setState({ heroSlide: slide });
+      }, { passive:true });
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this._heroTimer);
+    clearTimeout(this._pauseResume);
+  }
+  _heroTick() {
+    if (this._userPaused) return;
+    const el = document.getElementById('cdc-hero-slider');
+    if (!el || !el.clientWidth) return;
+    const count = this.movieData().length;
+    const next = this.state.heroSlide >= count - 1 ? 0 : this.state.heroSlide + 1;
+    el.scrollTo({ left: next * el.clientWidth, behavior:'smooth' });
+    this.setState({ heroSlide: next });
+  }
 
   renderVals() {
     const screen = this.state.screen;
@@ -867,8 +1170,19 @@ class Component extends DCLogic {
     const upcoming = this.upcomingData();
     const isPreorder = this.state.source === 'upcoming';
     const selList = isPreorder ? upcoming : movies;
-    const sel = selList[this.state.movieIndex] || movies[0];
-    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : 'Hoy, 24 jun';
+    const selBase = selList[this.state.movieIndex] || movies[0];
+    const sel = { ...selBase, format: selBase.format || (selBase.formats && selBase.formats[0]) || '' };
+    const todayDate = new Date();
+    const today = { year: todayDate.getFullYear(), month: todayDate.getMonth(), day: todayDate.getDate() };
+    const selDate = this.state.selectedDate || today;
+    const spanishMonths = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const todayMs = new Date(today.year, today.month, today.day).getTime();
+    const selMs = new Date(selDate.year, selDate.month, selDate.day).getTime();
+    const diffDays = Math.round((selMs - todayMs) / 86400000);
+    const dateLabel = diffDays === 0 ? `Hoy, ${selDate.day} ${spanishMonths[selDate.month]}` :
+                      diffDays === 1 ? `Mañana, ${selDate.day} ${spanishMonths[selDate.month]}` :
+                      `${selDate.day} ${spanishMonths[selDate.month]}${selDate.year !== today.year ? ' ' + selDate.year : ''}`;
+    const dateShort = isPreorder ? (sel.premiere || 'Próximamente') : dateLabel;
     const occupied = new Set(['A1','A2','C5','C6','D8','E3','F10','F11','B7','H4','H5','G2','D1','E9','A11','C2']);
 
     const rootStyle = [
@@ -880,36 +1194,58 @@ class Component extends DCLogic {
       '--gradPoster:linear-gradient(180deg, transparent 50%, oklch(0 0 0 / 0.95) 100%)',
       '--shadowRed:0 10px 40px -10px oklch(0.60 0.235 25 / 0.5)',
       '--shadowPoster:0 20px 60px -20px oklch(0 0 0 / 0.8)',
+      '--green:oklch(0.72 0.17 150)',
       'background:var(--bg)','color:var(--fg)','min-height:100vh',
       "font-family:'Inter',system-ui,sans-serif",'-webkit-font-smoothing:antialiased'
     ].join(';');
 
     const iconBtnStyle = 'display:grid;place-items:center;height:36px;width:36px;border-radius:50%;border:1px solid var(--border);color:oklch(1 0 0 / 80%);text-decoration:none';
-    const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%;transition:border-color .2s,box-shadow .2s;outline:none';
+    const inputStyle = 'font-size:14px;padding:14px 15px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:#fff;font-family:inherit;width:100%;outline:none;transition:border-color .2s';
 
+    const activeNav = this.state.activeNav;
     const navLabels = ['Home','Cartelera','Próximamente','Promociones','Contacto'];
-    const navItems = navLabels.map((label, i) => ({
+    const navItems = navLabels.map((label) => ({
       label,
-      href: label === 'Cartelera' ? '#cartelera' : (label === 'Próximamente' ? '#proximamente' : '#'),
-      onClick: label === 'Home' ? this.goHome : null,
-      style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${i===0 ? 'var(--primary)' : 'oklch(1 0 0 / 85%)'}`,
+      href: label === 'Cartelera' ? '#cartelera' : label === 'Próximamente' ? '#proximamente' : label === 'Promociones' ? '#promociones' : label === 'Contacto' ? '#contacto' : 'javascript:void(0)',
+      onClick: label === 'Home' ? this.goHome : () => this.setState({ activeNav: label }),
+      style: `font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:3px;text-decoration:none;color:${label === activeNav ? 'var(--primary)' : 'oklch(1 0 0 / 85%)'}`,
     }));
 
-    const dayTabs = ['Hoy','Mañana','Sáb','Dom'].map((label, i) => {
-      const active = i === this.state.day;
-      return {
-        label,
-        onClick: () => this.setDay(i),
-        style: `border:none;cursor:pointer;border-radius:30px;padding:7px 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;transition:all .2s;${active ? 'background:var(--gradRed);color:#fff;box-shadow:var(--shadowRed)' : 'background:transparent;color:var(--gray)'}`,
-      };
-    });
+    const calYear = this.state.calYear;
+    const calMonth = this.state.calMonth;
+    const calMonthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const calMonthLabel = `${calMonthNames[calMonth]} ${calYear}`;
+    const calDayLabels = ['L','M','M','J','V','S','D'];
+    const firstDOW = new Date(calYear, calMonth, 1).getDay();
+    const startOffset = (firstDOW + 6) % 7;
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const cellBase = 'width:34px;height:34px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;padding:0;font-family:inherit';
+    const calCells = [];
+    for (let i = 0; i < startOffset; i++) {
+      calCells.push({ day: '', onClick: null, style: 'width:34px;height:34px;background:transparent;border:none;padding:0;cursor:default' });
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isPast = calYear < today.year ||
+                     (calYear === today.year && calMonth < today.month) ||
+                     (calYear === today.year && calMonth === today.month && d < today.day);
+      const isTodayCell = calYear === today.year && calMonth === today.month && d === today.day;
+      const isSelCell = calYear === selDate.year && calMonth === selDate.month && d === selDate.day;
+      let cellStyle;
+      if (isSelCell) cellStyle = `${cellBase};background:var(--gradRed);color:#fff;box-shadow:var(--shadowRed)`;
+      else if (isTodayCell) cellStyle = `${cellBase};background:transparent;color:#fff;outline:1.5px solid oklch(0.60 0.235 25 / 0.7)`;
+      else if (isPast) cellStyle = `${cellBase};background:transparent;color:oklch(0.78 0 0 / 0.3);cursor:not-allowed`;
+      else cellStyle = `${cellBase};background:transparent;color:oklch(0.78 0 0)`;
+      calCells.push({ day: d, style: cellStyle, onClick: isPast ? null : () => this.selectDate(calYear, calMonth, d) });
+    }
+    const calArrowStyle = 'width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--gray);cursor:pointer;font-size:18px;padding:0;line-height:1;font-family:inherit';
 
+    const stBtn = 'border:1px solid var(--border);cursor:pointer;border-radius:8px;background:oklch(0.07 0 0 / .4);padding:8px;font-size:14px;font-weight:800;color:#fff';
     const moviesVm = movies.map((m, idx) => ({
       ...m,
       slotId: 'cdc-poster-' + idx,
       posterHint: 'Póster ' + m.title,
       onComprar: () => this.openSeats(idx, m.schedule[0]),
-      schedule: m.schedule.map(time => ({ time, onClick: () => this.openSeats(idx, time) })),
+      schedule: m.schedule.map(time => ({ time, onClick: () => this.openSeats(idx, time), style: stBtn })),
     }));
 
     const upcomingVm = upcoming.map((u, idx) => ({
@@ -917,6 +1253,38 @@ class Component extends DCLogic {
       slotId: 'cdc-upcoming-' + idx,
       posterHint: 'Póster ' + u.title,
       onPreorder: () => this.openPreorder(idx),
+    }));
+
+    const sq = (this.state.searchQuery || '').toLowerCase().trim();
+    const allMoviesSearch = [
+      ...movies.map(m => ({ title:m.title, genre:m.genre, isNow:true, idx:movies.indexOf(m), schedule:m.schedule })),
+      ...upcoming.map(u => ({ title:u.title, genre:u.genre, isNow:false, idx:upcoming.indexOf(u), schedule:null })),
+    ];
+    const searchResultsRaw = sq.length > 1
+      ? allMoviesSearch.filter(m => m.title.toLowerCase().includes(sq) || m.genre.toLowerCase().includes(sq))
+      : [];
+    const searchResultsVm = searchResultsRaw.map(m => ({
+      title: m.title,
+      genre: m.genre,
+      badge: m.isNow ? 'En cartelera' : 'Próximamente',
+      badgeStyle: m.isNow
+        ? 'background:var(--primary);color:#fff'
+        : 'background:oklch(0.28 0.07 260);color:oklch(1 0 0 / 80%)',
+      onClick: m.isNow
+        ? () => { this.setState({ searchOpen:false }); this.openSeats(m.idx, m.schedule[0]); }
+        : () => { this.setState({ searchOpen:false }); this.openPreorder(m.idx); },
+    }));
+    const searchEmpty = sq.length > 1 && searchResultsRaw.length === 0;
+
+    const heroDots = movies.map((_, i) => ({
+      style: `width:${i === this.state.heroSlide ? '24px' : '8px'};height:8px;border-radius:4px;background:${i === this.state.heroSlide ? 'var(--primary)' : 'oklch(1 0 0 / 25%)'};transition:all .35s ease`,
+    }));
+    const heroMoviesVm = movies.map((m, i) => ({
+      ...m,
+      bgSlotId: 'cdc-hero-bg-' + i,
+      posterSlotId: 'cdc-hero-poster-' + i,
+      firstFormat: m.formats[0] || '',
+      onBuy: () => this.openSeats(i, m.schedule[0]),
     }));
 
     // seats
@@ -954,20 +1322,66 @@ class Component extends DCLogic {
       qrCells.push({ style:`border-radius:1px;background:${on ? '#0a0a0a' : 'transparent'}` });
     }
 
+    // payouts / bank
+    const banks = [
+      { id:'bbva', name:'BBVA' }, { id:'banorte', name:'Banorte' },
+      { id:'santander', name:'Santander' }, { id:'banamex', name:'Citibanamex' },
+      { id:'hsbc', name:'HSBC' }, { id:'scotiabank', name:'Scotiabank' },
+      { id:'nu', name:'Nu' }, { id:'azteca', name:'Banco Azteca' },
+    ];
+    const bf = this.state.bankForm;
+    const chipBase = 'cursor:pointer;border-radius:12px;padding:14px 10px;font-size:13px;font-weight:800;text-align:center;font-family:inherit';
+    const banksVm = banks.map(b => {
+      const active = bf.bankId === b.id;
+      return { name:b.name, onClick:()=>this.pickBank(b.id,b.name),
+        style:`${chipBase};border:1.5px solid ${active?'var(--primary)':'var(--border)'};background:${active?'oklch(0.60 0.235 25 / 14%)':'oklch(0.07 0 0 / .4)'};color:${active?'#fff':'var(--gray)'}` };
+    });
+    const canConnect = !!(bf.bankId && bf.holder.trim().length>2 && bf.clabe.length===18);
+    const connectBtnStyle = `width:100%;margin-top:22px;border:none;border-radius:30px;padding:15px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#fff;font-family:inherit;${canConnect?'background:var(--gradRed);cursor:pointer;box-shadow:var(--shadowRed)':'background:var(--border);cursor:not-allowed;opacity:.6'}`;
+    const info = this.state.bankInfo;
+    const deposits = this.state.deposits;
+    const totalNet = deposits.reduce((s,d)=>s+d.net,0);
+    const totalGross = deposits.reduce((s,d)=>s+d.amount,0);
+    const depBadge = 'border-radius:30px;padding:4px 11px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;background:oklch(0.72 0.17 150 / 18%);color:var(--green)';
+    const depositsVm = deposits.map(d => ({ ...d, amountLabel:this.mxn(d.amount), netLabel:this.mxn(d.net), methodLabel:d.method, badgeStyle:depBadge }));
+    const clabeMasked = info ? '•••• •••• •••• •••• ' + info.last4 : '';
+
+    // checkout payment method
+    const pm = this.state.payMethod;
+    const grandNow = grand;
+    const tabBase = 'display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border-radius:12px;padding:14px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;font-family:inherit';
+    const tabCardStyle = `${tabBase};border:1.5px solid ${pm==='card'?'var(--primary)':'var(--border)'};background:${pm==='card'?'oklch(0.60 0.235 25 / 14%)':'transparent'};color:${pm==='card'?'#fff':'var(--gray)'}`;
+    const tabSpeiStyle = `${tabBase};border:1.5px solid ${pm==='spei'?'var(--primary)':'var(--border)'};background:${pm==='spei'?'oklch(0.60 0.235 25 / 14%)':'transparent'};color:${pm==='spei'?'#fff':'var(--gray)'}`;
+    const speiClabe = '012180012345678905'.replace(/(\d{4})(\d{4})(\d{4})(\d{4})(\d{2})/, '$1 $2 $3 $4 $5');
+
+    // PIN keypad
+    const pinLen = this.state.pin.length;
+    const pinDots = [0,1,2,3].map(i => ({ style:`width:14px;height:14px;border-radius:50%;${i<pinLen?'background:var(--primary)':'border:1.5px solid var(--gray);opacity:.5'}` }));
+    const keyBase = 'cursor:pointer;border:1px solid var(--border);background:oklch(0.07 0 0 / .4);border-radius:14px;padding:0;height:58px;font-size:24px;font-weight:700;color:#fff;font-family:inherit';
+    const keypadVm = ['1','2','3','4','5','6','7','8','9'].map(k => ({ label:k, onClick:()=>this.pressPin(k), style:keyBase }));
+    keypadVm.push({ label:'', onClick:null, style:'visibility:hidden;border:none;background:transparent' });
+    keypadVm.push({ label:'0', onClick:()=>this.pressPin('0'), style:keyBase });
+    keypadVm.push({ label:'⌫', onClick:this.backPin, style:`${keyBase};font-size:20px;color:var(--gray)` });
+
     return {
       rootStyle, iconBtnStyle, inputStyle,
-      isHome: screen==='home', isSeats: screen==='seats', isCheckout: screen==='checkout', isConfirm: screen==='confirm',
+      isHome: screen==='home', isSeats: screen==='seats', isCheckout: screen==='checkout',
+      isConfirm: screen==='confirm', isLogin: screen==='login', isPayouts: screen==='payouts',
       trailerOpen: this.state.trailerOpen,
+      payProcessing: this.state.payProcessing,
 
-      featured: this.featured(),
-      navItems, dayTabs, movies: moviesVm, upcoming: upcomingVm,
+      featured: movies[this.state.heroSlide] || movies[0],
+      navItems, movies: moviesVm, upcoming: upcomingVm, heroDots, heroMoviesVm,
+      calOpen: this.state.calOpen, calBtnLabel: dateLabel,
+      calMonthLabel, calDayLabels, calCells, calArrowStyle,
+      prevMonth: this.prevMonth, nextMonth: this.nextMonth, toggleCal: this.toggleCal,
       isPreorder, dateShort,
       confirmLabel: isPreorder ? 'Preventa confirmada' : 'Compra confirmada',
 
       experiences: [
-        { name:'IMAX', tag:'Sensorial', desc:'Pantalla gigante y sonido envolvente de última generación. La experiencia más inmersiva del cine.' },
-        { name:'4DX', tag:'Inmersivo', desc:'Asientos en movimiento, viento, agua y aromas en sincronía con la película. Siente cada escena.' },
-        { name:'VIP', tag:'Premium', desc:'Salas exclusivas con butacas reclinables, servicio en sala y menú de alimentos gourmet.' },
+        { name:'IMAX', tag:'Sensorial', desc:'Pantalla gigante y sonido envolvente de última generación.' },
+        { name:'4DX', tag:'Inmersivo', desc:'Asientos en movimiento, viento, agua y aromas en sincronía con la película.' },
+        { name:'VIP', tag:'Premium', desc:'Salas exclusivas con butacas reclinables y servicio en sala.' },
       ],
       footerCols: [
         { title:'Cartelera', links:['Hoy','Próximamente','Avant Premiere','Festivales'] },
@@ -983,12 +1397,56 @@ class Component extends DCLogic {
       subtotalLabel: this.mxn(subtotal),
       feeLabel: this.mxn(fee),
       grandTotalLabel: this.mxn(grand),
-      continueStyle: `border:none;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:13px 30px;border-radius:30px;color:#fff;transition:transform .2s,box-shadow .2s;${hasSeats ? 'background:var(--gradRed);cursor:pointer;box-shadow:var(--shadowRed)' : 'background:var(--border);cursor:not-allowed;opacity:.6'}`,
-      qrCells, bookingCode:'CDC-7F2A9',
+      continueStyle: `border:none;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:13px 30px;border-radius:30px;color:#fff;font-family:inherit;${hasSeats ? 'background:var(--gradRed);cursor:pointer;box-shadow:var(--shadowRed)' : 'background:var(--border);cursor:not-allowed;opacity:.6'}`,
+      qrCells, lastCode: this.state.lastCode,
+
+      form: this.state.form,
+      formError: this.state.formError,
+      onInputName: (e) => this.setForm('name', e.target.value),
+      onInputEmail: (e) => this.setForm('email', e.target.value),
+      onInputCard: (e) => this.setForm('card', e.target.value),
+      onInputExpiry: (e) => this.setForm('expiry', e.target.value),
+      onInputCvv: (e) => this.setForm('cvv', e.target.value),
+
+      payCard: pm==='card', paySpei: pm==='spei',
+      tabCardStyle, tabSpeiStyle,
+      selectCard:this.selectCard, selectSpei:this.selectSpei,
+      speiBank:'BBVA', speiBeneficiario:'Cinemas del Country S.A.',
+      speiClabe,
+      speiRef: 'CDC-' + (sel.title||'').replace(/[^A-Za-z]/g,'').slice(0,4).toUpperCase(),
+      copyClabe:this.copyClabe, copyLabel: this.state.copied ? 'Copiado ✓' : 'Copiar',
+      payCtaLabel: pm==='spei' ? 'Confirmar transferencia' : `Pagar ${this.mxn(grandNow)}`,
+      payProcessingLabel: pm==='spei' ? 'Confirmando tu transferencia SPEI…' : `Cobrando ${this.mxn(grandNow)} a la tarjeta…`,
+
+      bankConnected: this.state.bankConnected,
+      bankNotConnected: !this.state.bankConnected,
+      depositNoteLabel: pm==='spei' ? 'Transferencia SPEI recibida en la cuenta del cine' : 'Cobro depositado a la cuenta del cine',
+      depositBankLabel: info ? `${info.bank} ••${info.last4}` : '',
+      payBenefits: [
+        { num:'1', title:'El dinero llega solo', desc:'Cada cobro con tarjeta se deposita a tu cuenta sin que tengas que hacer nada.' },
+        { num:'2', title:'Depósitos el mismo día', desc:'Las ventas del día caen a tu banco automáticamente, todos los días.' },
+        { num:'3', title:'Todo en un panel', desc:'Consulta cuánto has recibido y el detalle de cada transferencia.' },
+      ],
+      banksVm, canConnect, connectBtnStyle,
+      bankFormHolder: bf.holder, bankFormClabe: bf.clabe,
+      clabeCountLabel: `${bf.clabe.length}/18 dígitos`,
+      bankBankName: info ? info.bank : '', bankHolder: info ? info.holder : '', clabeMasked,
+      depositsVm, depositsCount: deposits.length,
+      totalNetLabel: this.mxn(totalNet), feeTotalLabel: this.mxn(totalGross-totalNet),
+      connectBank:this.connectBank, disconnectBank:this.disconnectBank,
+      onHolder:this.onHolder, onClabe:this.onClabe,
+
+      pinDots, keypadVm, pinError:this.state.pinError, accessHint:'Código demo: 2470',
+      pressPin:this.pressPin, backPin:this.backPin,
+
+      searchOpen: this.state.searchOpen, searchQuery: this.state.searchQuery,
+      searchResultsVm, searchEmpty,
+      openSearch:this.openSearch, closeSearch:this.closeSearch, onSearchQuery:this.onSearchQuery,
 
       goHome:this.goHome, buyFeatured:this.buyFeatured, goCheckout:this.goCheckout,
       backToSeats:this.backToSeats, confirmPurchase:this.confirmPurchase,
       openTrailer:this.openTrailer, closeTrailer:this.closeTrailer,
+      goPayouts:this.goPayouts, lockOwner:this.lockOwner,
     };
   }
 }
